@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://b03ya11b5bo5r"]
+
+[ext_resource type="Script" uid="uid://db2q13n3w5bpf" path="res://scenes/flippers.gd" id="1_3tc68"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jgsmh"]
+
+[node name="Flippers" type="AnimatableBody2D" unique_id=1309368954]
+script = ExtResource("1_3tc68")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=668592814]
+sprite_frames = SubResource("SpriteFrames_jgsmh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1209279245]

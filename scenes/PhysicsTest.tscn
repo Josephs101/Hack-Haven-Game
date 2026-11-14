@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://51ki3wsnk5p0"]
+
+[ext_resource type="PackedScene" uid="uid://dt6s8sldfxurv" path="res://scenes/Camera.tscn" id="1_nflhr"]
+[ext_resource type="PackedScene" uid="uid://dkdabpuplfkah" path="res://scenes/Ground.tscn" id="2_ga87r"]
+[ext_resource type="PackedScene" uid="uid://3unhg68ipx4b" path="res://scenes/PinBall.tscn" id="3_u21o4"]
+[ext_resource type="PackedScene" uid="uid://ddidylp1o4dg2" path="res://scenes/LeftWall.tscn" id="4_xxl7r"]
+[ext_resource type="PackedScene" uid="uid://di5btqalgjj3q" path="res://scenes/RightWall.tscn" id="5_dpjee"]
+[ext_resource type="PackedScene" uid="uid://bew01jfprilr" path="res://scenes/Peg.tscn" id="6_ga87r"]
+[ext_resource type="PackedScene" uid="uid://djtoeipqgwphp" path="res://scenes/Bumper.tscn" id="7_u21o4"]
+
+[node name="PhysicsTest" type="Node2D" unique_id=41022760]
+
+[node name="Camera" parent="." unique_id=767900133 instance=ExtResource("1_nflhr")]
+position = Vector2(575, 243)
+
+[node name="Node2D" parent="." unique_id=896789467 instance=ExtResource("2_ga87r")]
+
+[node name="Ball" parent="." unique_id=374957024 instance=ExtResource("3_u21o4")]
+position = Vector2(464, 119)
+scale = Vector2(0.5, 0.5)
+
+[node name="Node2D2" parent="." unique_id=1082685119 instance=ExtResource("4_xxl7r")]
+
+[node name="Node2D3" parent="." unique_id=230441973 instance=ExtResource("5_dpjee")]
+position = Vector2(46, -46)
+
+[node name="Peg" parent="." unique_id=1192331612 instance=ExtResource("6_ga87r")]
+position = Vector2(318, 236)
+
+[node name="Peg3" parent="." unique_id=234524716 instance=ExtResource("6_ga87r")]
+position = Vector2(956, 467)
+
+[node name="Peg2" parent="." unique_id=564250930 instance=ExtResource("6_ga87r")]
+position = Vector2(160, 468)
+
+[node name="Bumper" parent="." unique_id=1407537393 instance=ExtResource("7_u21o4")]
+position = Vector2(395, 392)
+
+[node name="Bumper5" parent="." unique_id=358863029 instance=ExtResource("7_u21o4")]
+position = Vector2(818, 365)
+
+[node name="Bumper3" parent="." unique_id=1777831686 instance=ExtResource("7_u21o4")]
+position = Vector2(512, 486)
+
+[node name="Bumper2" parent="." unique_id=1063781336 instance=ExtResource("7_u21o4")]
+position = Vector2(479, 433)
+
+[node name="Bumper4" parent="." unique_id=1392742751 instance=ExtResource("7_u21o4")]
+position = Vector2(723, 489)

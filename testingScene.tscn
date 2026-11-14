@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://dne1ehcpy2jqj"]
-
-[node name="Testing" type="Node2D" unique_id=734987319]
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1268527506]
