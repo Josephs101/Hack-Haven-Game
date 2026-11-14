@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://3pfeu4grg100"]
 
-[ext_resource type="Script" uid="uid://dataf2nqhk4w2" path="res://scripts/pause_menu.gd" id="1_myx47"]
+[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_myx47"]
 [ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="1_n87rw"]
 
 [node name="PauseMenu" type="Control" unique_id=237595338]

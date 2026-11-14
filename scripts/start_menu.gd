@@ -4,6 +4,7 @@ const GAME_SCENE := "res://scenes/LevelScreen.tscn"
 
 
 func _ready() -> void:
+	get_tree().paused = false
 	%NewRun.pressed.connect(_on_new_run)
 	%Quit.pressed.connect(_on_quit)
 	%NewRun.grab_focus()
