@@ -12,10 +12,10 @@ script = ExtResource("1_qdpy8")
 offset_right = 579.0
 offset_bottom = 313.0
 
-[node name="InGameUI" parent="." unique_id=98619963 instance=ExtResource("1_wbs0h")]
-
 [node name="UI" type="CanvasLayer" parent="." unique_id=1305315445]
 layer = 10
+
+[node name="InGameUI" parent="UI" unique_id=98619963 instance=ExtResource("1_wbs0h")]
 
 [node name="GameOver" parent="UI" unique_id=237884269 instance=ExtResource("3_qdpy8")]
 
