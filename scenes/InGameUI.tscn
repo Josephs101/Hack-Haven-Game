@@ -1,9 +1,119 @@
-[gd_scene format=3 uid="uid://djkd6f5gk1l6u"]
+[gd_scene load_steps=3 format=3 uid="uid://djkd6f5gk1l6u"]
 
-[node name="Control" type="Control" unique_id=1120498108]
+[ext_resource type="Script" path="res://scripts/in_game_ui.gd" id="1_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(0.047, 0.055, 0.09, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.3, 0.45, 0.6)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="InGameUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ui")
+
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
+
+[node name="Margin" type="MarginContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="Row" type="HBoxContainer" parent="TopBar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ScoreBlock" type="VBoxContainer" parent="TopBar/Margin/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="ScoreCaption" type="Label" parent="TopBar/Margin/Row/ScoreBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.75, 1)
+theme_override_font_sizes/font_size = 16
+text = "SCORE"
+
+[node name="ScoreValue" type="Label" parent="TopBar/Margin/Row/ScoreBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.784314, 0.341176, 1)
+theme_override_font_sizes/font_size = 40
+text = "0"
+
+[node name="ScoreSpacer" type="Control" parent="TopBar/Margin/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="BossBlock" type="VBoxContainer" parent="TopBar/Margin/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="BossName" type="Label" parent="TopBar/Margin/Row/BossBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "BOSS"
+
+[node name="BossBar" type="ProgressBar" parent="TopBar/Margin/Row/BossBlock"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="BossSpacer" type="Control" parent="TopBar/Margin/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="BallsBlock" type="VBoxContainer" parent="TopBar/Margin/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="BallsCaption" type="Label" parent="TopBar/Margin/Row/BallsBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.6, 0.75, 1)
+theme_override_font_sizes/font_size = 16
+text = "BALLS"
+
+[node name="BallsValue" type="Label" parent="TopBar/Margin/Row/BallsBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "3"
