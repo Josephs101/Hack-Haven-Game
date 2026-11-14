@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://d307hcddkgy54"]
+
+[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="1_fb70i"]
+
+[node name="StartMenu" type="Control" unique_id=244701375]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Sprite2D" parent="." unique_id=558453626]
+position = Vector2(580.5, 326)
+scale = Vector2(8.9765625, 5.015625)
+texture = ExtResource("1_fb70i")
+
+[node name="Background2" type="Sprite2D" parent="." unique_id=793225129]
+position = Vector2(593, 210)
+scale = Vector2(5.5312495, 2.4687498)
+texture = ExtResource("1_fb70i")
+
+[node name="NEW RUN" type="Button" parent="." unique_id=1962795652]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 412.0
+offset_right = 540.0
+offset_bottom = 548.0
+icon = ExtResource("1_fb70i")
+
+[node name="QUIT" type="Button" parent="." unique_id=143161327]
+layout_mode = 0
+offset_left = 652.0
+offset_top = 412.0
+offset_right = 932.0
+offset_bottom = 548.0
+icon = ExtResource("1_fb70i")
