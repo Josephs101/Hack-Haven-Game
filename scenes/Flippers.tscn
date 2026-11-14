@@ -1,13 +1,102 @@
 [gd_scene format=3 uid="uid://b03ya11b5bo5r"]
 
 [ext_resource type="Script" uid="uid://db2q13n3w5bpf" path="res://scenes/flippers.gd" id="1_3tc68"]
+[ext_resource type="Texture2D" uid="uid://c2c0bc6dxh6cx" path="res://assets/sprites/flipper_animation.png" id="2_jgsmh"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_jgsmh"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_jgsmh"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(480, 0, 80, 83)
 
-[node name="Flippers" type="AnimatableBody2D" unique_id=1309368954]
+[sub_resource type="AtlasTexture" id="AtlasTexture_kgykn"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(560, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x40yx"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(640, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d248x"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(80, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3k4ex"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(160, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bdufu"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(240, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tsws3"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(320, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bndg1"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(400, 0, 80, 83)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d4tb0"]
+atlas = ExtResource("2_jgsmh")
+region = Rect2(0, 0, 80, 83)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kgykn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jgsmh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kgykn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x40yx")
+}],
+"loop": false,
+"name": &"Fall",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d248x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3k4ex")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bdufu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tsws3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bndg1")
+}],
+"loop": false,
+"name": &"Raise",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d4tb0")
+}],
+"loop": true,
+"name": &"Rest",
+"speed": 5.0
+}]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_jgsmh"]
+points = PackedVector2Array(-21, -1, 0, -25, 102, -1, 0, 25)
+
+[node name="Flippers" type="Node2D" unique_id=1203122303]
 script = ExtResource("1_3tc68")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=668592814]
-sprite_frames = SubResource("SpriteFrames_jgsmh")
+position = Vector2(37, -40)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_kgykn")
+animation = &"Rest"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1209279245]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=2074405972]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1209279245]
+shape = SubResource("ConvexPolygonShape2D_jgsmh")
