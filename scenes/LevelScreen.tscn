@@ -1,3 +1,22 @@
-[gd_scene format=3 uid="uid://fxeseeesv2qn"]
+[gd_scene load_steps=5 format=3 uid="uid://btnchici7wo1i"]
 
-[node name="Node2D" type="Node2D" unique_id=896789467]
+[ext_resource type="Script" uid="uid://d3fllhpsu5wyc" path="res://scenes/level_screen.gd" id="1_qdpy8"]
+[ext_resource type="PackedScene" uid="uid://djkd6f5gk1l6u" path="res://scenes/InGameUI.tscn" id="1_wbs0h"]
+[ext_resource type="PackedScene" uid="uid://ccrsgcupr7fsv" path="res://scenes/game_over.tscn" id="3_qdpy8"]
+[ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="4_016qk"]
+
+[node name="LevelScreen" type="Node2D"]
+script = ExtResource("1_qdpy8")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 579.0
+offset_bottom = 313.0
+
+[node name="InGameUI" parent="." instance=ExtResource("1_wbs0h")]
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="GameOver" parent="UI" instance=ExtResource("3_qdpy8")]
+
+[node name="PauseMenu" parent="UI" instance=ExtResource("4_016qk")]
