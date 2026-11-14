@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://h6u0j4lge2ve" path="res://scenes/start_menu.gd" id="1_m7x51"]
 [ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="1_thu50"]
 
-[node name="StartMenu" type="Control" unique_id=244701375]
+[node name="StartMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,30 +12,32 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_m7x51")
 
-[node name="Background" type="Sprite2D" parent="." unique_id=558453626]
+[node name="Background" type="Sprite2D" parent="."]
 position = Vector2(815.50006, 612)
 scale = Vector2(12.648438, 9.484375)
 texture = ExtResource("1_thu50")
 
-[node name="Background2" type="Sprite2D" parent="." unique_id=793225129]
+[node name="Background2" type="Sprite2D" parent="."]
 position = Vector2(792, 398)
 scale = Vector2(5.5312495, 2.4687498)
 texture = ExtResource("1_thu50")
 
-[node name="NewRun" type="Button" parent="." unique_id=1962795652]
+[node name="NewRun" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 288.0
 offset_top = 738.0
 offset_right = 725.0
 offset_bottom = 1045.0
-icon = ExtResource("1_thu50")
+theme_override_font_sizes/font_size = 40
+text = "NEW RUN"
 
-[node name="Quit" type="Button" parent="." unique_id=143161327]
+[node name="Quit" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 837.0
 offset_top = 738.0
 offset_right = 1332.0
 offset_bottom = 1054.0
-icon = ExtResource("1_thu50")
+theme_override_font_sizes/font_size = 40
+text = "QUIT"
