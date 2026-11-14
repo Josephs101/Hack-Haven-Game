@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://djtoeipqgwphp"]
+
+[ext_resource type="Script" uid="uid://ynrdlawnkv4v" path="res://scenes/bumper.gd" id="1_61no2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ejkcc"]
+radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_61no2"]
+radius = 16.0
+
+[node name="Bumper" type="StaticBody2D" unique_id=1407537393]
+script = ExtResource("1_61no2")
+
+[node name="InnerArea" type="CollisionShape2D" parent="." unique_id=526104218]
+shape = SubResource("CircleShape2D_ejkcc")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1821647873]
+
+[node name="BumperArea" type="Area2D" parent="." unique_id=1100718477]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BumperArea" unique_id=924819194]
+shape = SubResource("CircleShape2D_61no2")
