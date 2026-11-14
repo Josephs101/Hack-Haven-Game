@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://btnchici7wo1i"]
+
+[ext_resource type="Script" uid="uid://d3fllhpsu5wyc" path="res://scenes/level_screen.gd" id="1_qdpy8"]
+[ext_resource type="PackedScene" uid="uid://djkd6f5gk1l6u" path="res://scenes/InGameUI.tscn" id="1_wbs0h"]
+[ext_resource type="PackedScene" uid="uid://ccrsgcupr7fsv" path="res://scenes/game_over.tscn" id="3_qdpy8"]
+[ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="4_016qk"]
+
+[node name="Node2D" type="Node2D" unique_id=896789467]
+script = ExtResource("1_qdpy8")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=723341165]
+offset_right = 579.0
+offset_bottom = 313.0
+
+[node name="Control" parent="." unique_id=1120498108 instance=ExtResource("1_wbs0h")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=544703139]
+
+[node name="Control2" parent="CanvasLayer" unique_id=172111338 instance=ExtResource("3_qdpy8")]
+
+[node name="PauseMenu" parent="CanvasLayer" unique_id=237595338 instance=ExtResource("4_016qk")]

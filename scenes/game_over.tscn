@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://ccrsgcupr7fsv"]
+
+[ext_resource type="Script" uid="uid://dkogwy31c543" path="res://scenes/game_over.gd" id="1_wqhvx"]
+[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="2_tbwuq"]
+
+[node name="Control" type="Control" unique_id=172111338]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wqhvx")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1502938931]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -18.0
+offset_right = 30.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14509805, 0.14509805, 0.14509805, 0.654902)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1526400355]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=889373046]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+texture = ExtResource("2_tbwuq")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=292245312]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="CenterContainer/PanelContainer" unique_id=1110103633]
+layout_mode = 2
+alignment = 1
+vertical = true
+
+[node name="ScoreLabel2" type="Label" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=472502767]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=494174304]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Score:0"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=1478595572]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Restart"
+flat = true

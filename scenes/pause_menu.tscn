@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://3pfeu4grg100"]
+
+[ext_resource type="Script" uid="uid://dataf2nqhk4w2" path="res://scenes/pause_menu.gd" id="1_myx47"]
+[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="1_n87rw"]
+
+[node name="PauseMenu" type="Control" unique_id=237595338]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_myx47")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=667783994]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -18.0
+offset_right = 30.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14509805, 0.14509805, 0.14509805, 0.654902)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=569558144]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=602607728]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+texture = ExtResource("1_n87rw")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=586981699]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="CenterContainer/PanelContainer" unique_id=1105780820]
+layout_mode = 2
+alignment = 1
+vertical = true
+
+[node name="PausedLabel" type="Label" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=1259542100]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=1102913139]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "RESUME"
+flat = true
+
+[node name="Quit" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=573209138]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "QUIT"
+flat = true
+
+[node name="Restart" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=910835507]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "RESTART"
+flat = true
