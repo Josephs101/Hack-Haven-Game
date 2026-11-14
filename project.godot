@@ -24,7 +24,6 @@ GameStats="*uid://be7iduesmmgmk"
 window/size/viewport_width=1072
 window/size/viewport_height=1072
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 
 [input]
 

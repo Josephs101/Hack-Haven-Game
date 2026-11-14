@@ -1,20 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://djkd6f5gk1l6u"]
+[gd_scene format=3 uid="uid://djkd6f5gk1l6u"]
 
-[ext_resource type="Script" path="res://scripts/in_game_ui.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://nt86ukgje8o0" path="res://scripts/in_game_ui.gd" id="1_ui"]
+[ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="2_6e2fk"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
-bg_color = Color(0.047, 0.055, 0.09, 0.92)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.2, 0.3, 0.45, 0.6)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5ldle"]
 
-[node name="InGameUI" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6e2fk"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ldle"]
+bg_color = Color(1, 0, 0, 1)
+
+[node name="InGameUI" type="Control" unique_id=1979793841]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,96 +21,111 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_ui")
 
-[node name="TopBar" type="PanelContainer" parent="."]
+[node name="TopBar" type="PanelContainer" parent="." unique_id=783857270]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 120.0
+offset_left = 0.9999981
+offset_top = 37.77999
+offset_right = -399.52667
+offset_bottom = 113.77999
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
+scale = Vector2(1.595, 1.595)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5ldle")
 
-[node name="Margin" type="MarginContainer" parent="TopBar"]
+[node name="Margin" type="MarginContainer" parent="TopBar" unique_id=709393283]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="Row" type="HBoxContainer" parent="TopBar/Margin"]
+[node name="Row" type="HBoxContainer" parent="TopBar/Margin" unique_id=1035372482]
 layout_mode = 2
-theme_override_constants/separation = 24
+size_flags_horizontal = 0
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.63
+theme_override_constants/separation = 12
+alignment = 1
 
-[node name="ScoreBlock" type="VBoxContainer" parent="TopBar/Margin/Row"]
+[node name="ScoreBlock" type="VBoxContainer" parent="TopBar/Margin/Row" unique_id=623687541]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 0
 
-[node name="ScoreCaption" type="Label" parent="TopBar/Margin/Row/ScoreBlock"]
+[node name="ScoreCaption" type="Label" parent="TopBar/Margin/Row/ScoreBlock" unique_id=1118733791]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.75, 1)
+theme_override_fonts/font = ExtResource("2_6e2fk")
 theme_override_font_sizes/font_size = 16
 text = "SCORE"
 
-[node name="ScoreValue" type="Label" parent="TopBar/Margin/Row/ScoreBlock"]
+[node name="ScoreValue" type="Label" parent="TopBar/Margin/Row/ScoreBlock" unique_id=1948611762]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.784314, 0.341176, 1)
+theme_override_fonts/font = ExtResource("2_6e2fk")
 theme_override_font_sizes/font_size = 40
 text = "0"
 
-[node name="ScoreSpacer" type="Control" parent="TopBar/Margin/Row"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="BossBlock" type="VBoxContainer" parent="TopBar/Margin/Row"]
+[node name="BossBlock" type="VBoxContainer" parent="TopBar/Margin/Row" unique_id=1632931701]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(300, 40)
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_constants/separation = 2
 
-[node name="BossName" type="Label" parent="TopBar/Margin/Row/BossBlock"]
+[node name="BossName" type="Label" parent="TopBar/Margin/Row/BossBlock" unique_id=866398202]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_6e2fk")
 theme_override_font_sizes/font_size = 18
 text = "BOSS"
 
-[node name="BossBar" type="ProgressBar" parent="TopBar/Margin/Row/BossBlock"]
+[node name="BossBar" type="ProgressBar" parent="TopBar/Margin/Row/BossBlock" unique_id=1037884345]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 22)
+custom_minimum_size = Vector2(300, 30)
 layout_mode = 2
 size_flags_horizontal = 3
-max_value = 100.0
+theme_override_styles/background = SubResource("StyleBoxFlat_6e2fk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_5ldle")
 value = 100.0
 show_percentage = false
 
-[node name="BossSpacer" type="Control" parent="TopBar/Margin/Row"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="BallsBlock" type="VBoxContainer" parent="TopBar/Margin/Row"]
+[node name="BossHealthLabel" type="Label" parent="TopBar/Margin/Row/BossBlock/BossBar" unique_id=1852887795]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = 4.0
+offset_top = 2.0
+offset_right = 404.0
+offset_bottom = 21.0
+theme_override_fonts/font = ExtResource("2_6e2fk")
+theme_override_font_sizes/font_size = 18
+text = "BOSS"
+
+[node name="BallsBlock" type="VBoxContainer" parent="TopBar/Margin/Row" unique_id=1745800700]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 0
+alignment = 2
 
-[node name="BallsCaption" type="Label" parent="TopBar/Margin/Row/BallsBlock"]
+[node name="BallsCaption" type="Label" parent="TopBar/Margin/Row/BallsBlock" unique_id=1706841644]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.6, 0.75, 1)
+theme_override_fonts/font = ExtResource("2_6e2fk")
 theme_override_font_sizes/font_size = 16
 text = "BALLS"
+horizontal_alignment = 2
+vertical_alignment = 3
 
-[node name="BallsValue" type="Label" parent="TopBar/Margin/Row/BallsBlock"]
+[node name="BallsValue" type="Label" parent="TopBar/Margin/Row/BallsBlock" unique_id=741822138]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_6e2fk")
 theme_override_font_sizes/font_size = 40
 text = "3"
+horizontal_alignment = 2

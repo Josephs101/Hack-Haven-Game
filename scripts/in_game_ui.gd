@@ -3,6 +3,7 @@ extends Control
 @onready var score_value: Label = %ScoreValue
 @onready var boss_bar: ProgressBar = %BossBar
 @onready var balls_value: Label = %BallsValue
+@onready var boss_value: Label = %BossHealthLabel
 
 
 func _ready() -> void:
@@ -22,6 +23,8 @@ func _on_score_changed(value: int) -> void:
 func _on_boss_health_changed(hp: int, max_hp: int) -> void:
 	boss_bar.max_value = max_hp
 	boss_bar.value = hp
+	boss_value.text = "%d / %d" % [hp, max_hp]
+
 
 
 func _on_balls_changed(left: int) -> void:

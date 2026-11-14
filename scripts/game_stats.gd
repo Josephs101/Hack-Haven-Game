@@ -10,6 +10,7 @@ var score: int = 0:
 		score_changed.emit(score)
 
 var boss_max_hp := 100
+#PLACE HOLDER VALUE, WILL CHANGE DEPENDING ON LEVEL
 var boss_hp := 100
 var balls_left := 3
 
