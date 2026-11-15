@@ -39,7 +39,9 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("scoreable"):
-		GameStats.register_hit()
+		var gained := GameStats.register_hit()
+		if gained > 0:
+			GameStats.points_awarded.emit(gained, body.global_position)
 
 		# Pegs change colour and eventually break when hit; bumpers and
 		# flippers animate themselves.
