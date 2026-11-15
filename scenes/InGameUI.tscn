@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://djkd6f5gk1l6u"]
 
-[ext_resource type="Script" path="res://scripts/in_game_ui.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://nt86ukgje8o0" path="res://scripts/in_game_ui.gd" id="1_ui"]
 [ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="2_5ldle"]
 [ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="2_6e2fk"]
 [ext_resource type="Texture2D" uid="uid://dpd52i3df3bjf" path="res://assets/sprites/Slime_Animation.png" id="4_v2r2l"]
@@ -150,8 +150,32 @@ atlas = ExtResource("4_v2r2l")
 region = Rect2(960, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3p1qy"]
-atlas = ExtResource("2_5ldle")
-region = Rect2(128, 224, 32, 32)
+atlas = ExtResource("4_v2r2l")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gi5p5"]
+atlas = ExtResource("4_v2r2l")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3dk6l"]
+atlas = ExtResource("4_v2r2l")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8rsmr"]
+atlas = ExtResource("4_v2r2l")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nctm0"]
+atlas = ExtResource("4_v2r2l")
+region = Rect2(896, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jt4lc"]
+atlas = ExtResource("4_v2r2l")
+region = Rect2(928, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_53koo"]
+atlas = ExtResource("4_v2r2l")
+region = Rect2(960, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_gi5p5"]
 animations = [{
@@ -249,17 +273,41 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pq2iq")
 }],
-"loop": true,
+"loop": false,
 "name": &"bouncy",
 "speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3p1qy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gi5p5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3dk6l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8rsmr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nctm0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jt4lc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_53koo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gi5p5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_53koo")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 5.0
+"speed": 12.0
 }]
 
 [node name="InGameUI" type="Control" unique_id=1979793841]
@@ -425,9 +473,8 @@ scale = Vector2(4.44, 4.44)
 texture = SubResource("AtlasTexture_i40s5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TextureRect" unique_id=512617240]
+unique_name_in_owner = true
 position = Vector2(20.045042, 18.468466)
 scale = Vector2(0.98894984, 0.98895)
 sprite_frames = SubResource("SpriteFrames_gi5p5")
 animation = &"bouncy"
-autoplay = "bouncy"
-frame_progress = 0.0822435

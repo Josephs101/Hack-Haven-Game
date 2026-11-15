@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://csocqn4oj32a"]
 
-[ext_resource type="Script" uid="uid://dl4yydjtbqlx3" path="res://scenes/gameplay/red_bumper.gd" id="1_awiwh"]
+[ext_resource type="Script" uid="uid://dl4yydjtbqlx3" path="res://scripts/red_bumper.gd" id="1_awiwh"]
 [ext_resource type="PackedScene" uid="uid://djtoeipqgwphp" path="res://scenes/gameplay/Bumper.tscn" id="1_mp0o7"]
 [ext_resource type="Texture2D" uid="uid://boh1aatb33hno" path="res://assets/sprites/red_bumper_animation.png" id="2_awiwh"]
 
