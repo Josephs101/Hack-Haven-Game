@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://csocqn4oj32a"]
 
+[ext_resource type="Script" uid="uid://dl4yydjtbqlx3" path="res://scenes/gameplay/red_bumper.gd" id="1_awiwh"]
 [ext_resource type="PackedScene" uid="uid://djtoeipqgwphp" path="res://scenes/gameplay/Bumper.tscn" id="1_mp0o7"]
 [ext_resource type="Texture2D" uid="uid://boh1aatb33hno" path="res://assets/sprites/red_bumper_animation.png" id="2_awiwh"]
 
@@ -31,10 +32,6 @@ region = Rect2(288, 0, 48, 48)
 atlas = ExtResource("2_awiwh")
 region = Rect2(336, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_n8wja"]
-atlas = ExtResource("2_awiwh")
-region = Rect2(384, 0, 48, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_ht4pi"]
 atlas = ExtResource("2_awiwh")
 region = Rect2(0, 0, 48, 48)
@@ -62,12 +59,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_7abgx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n8wja")
 }],
 "loop": false,
-"name": &"bounce",
+"name": &"Bounce",
 "speed": 24.0
 }, {
 "frames": [{
@@ -75,11 +69,12 @@ animations = [{
 "texture": SubResource("AtlasTexture_ht4pi")
 }],
 "loop": true,
-"name": &"rest",
-"speed": 5.0
+"name": &"Rest",
+"speed": 24.0
 }]
 
 [node name="RedBumper" type="Node2D" unique_id=118269851]
+script = ExtResource("1_awiwh")
 
 [node name="Bumper" parent="." unique_id=1407537393 instance=ExtResource("1_mp0o7")]
 
@@ -87,6 +82,4 @@ animations = [{
 position = Vector2(2, 4)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_ucolp")
-animation = &"bounce"
-frame = 7
-frame_progress = 1.0
+animation = &"Bounce"
