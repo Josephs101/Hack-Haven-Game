@@ -932,6 +932,7 @@ frame_progress = 0.38425758
 [node name="DamageOverlay" type="AnimatedSprite2D" parent="TextureRect" unique_id=731649902]
 unique_name_in_owner = true
 visible = false
+speed_scale = 0.5
 position = Vector2(20.045042, 17.79279)
 scale = Vector2(0.98894984, 0.98895)
 sprite_frames = SubResource("SpriteFrames_uktmb")

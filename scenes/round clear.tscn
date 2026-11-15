@@ -165,6 +165,7 @@ color = Color(0.14509805, 0.14509805, 0.14509805, 0.654902)
 [node name="Confetti" type="AnimatedSprite2D" parent="." unique_id=1145780147]
 unique_name_in_owner = true
 visible = false
+speed_scale = 0.5
 position = Vector2(536, 536)
 sprite_frames = SubResource("SpriteFrames_6wto8")
 animation = &"big_confetti"
