@@ -8,6 +8,7 @@ func _ready() -> void:
 	%NewRun.pressed.connect(_on_new_run)
 	%Quit.pressed.connect(_on_quit)
 	$Credits.pressed.connect(_on_credits)
+	%howToPlay.pressed.connect(_on_help)
 
 	for button in [%NewRun, %Quit]:
 		button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -37,7 +38,10 @@ func _on_new_run() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file(GAME_SCENE)
 
-
+func _on_help() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/howToPlay.tscn")
+	
 func _on_quit() -> void:
 	get_tree().quit()
 

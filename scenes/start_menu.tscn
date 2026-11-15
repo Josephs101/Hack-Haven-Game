@@ -43,12 +43,37 @@ offset_bottom = 650.0
 scale = Vector2(1.33, 1.33)
 texture = ExtResource("2_h61rw")
 
+[node name="howToPlay" type="Button" parent="." unique_id=1603015643]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 161.0
+offset_top = 572.0
+offset_right = 560.0
+offset_bottom = 800.0
+theme_override_font_sizes/font_size = 40
+icon = SubResource("AtlasTexture_h61rw")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Label" type="Label" parent="howToPlay" unique_id=2128723945]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 29.0
+offset_right = 398.0
+offset_bottom = 226.0
+theme_override_fonts/font = ExtResource("4_fcv5n")
+theme_override_font_sizes/font_size = 53
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Credits" type="Button" parent="." unique_id=2143642899]
 layout_mode = 0
-offset_left = 371.0
-offset_top = 569.0
-offset_right = 770.0
-offset_bottom = 797.0
+offset_left = 592.0
+offset_top = 577.0
+offset_right = 991.0
+offset_bottom = 805.0
 theme_override_font_sizes/font_size = 40
 icon = SubResource("AtlasTexture_h61rw")
 flat = true

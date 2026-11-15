@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://chtehwd78gh36"]
+
+[ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="1_uaj1o"]
+[ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="2_yowti"]
+
+[node name="Control" type="Control" unique_id=1283284314]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=9571379]
+layout_mode = 0
+offset_top = 98.0
+offset_right = 42.59061
+offset_bottom = 174.01651
+scale = Vector2(25.662933, 14.75995)
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=713686871]
+custom_minimum_size = Vector2(0, 10.13)
+layout_mode = 0
+offset_left = 60.999992
+offset_top = -119.0
+offset_right = 1229.0
+offset_bottom = 1237.0
+scale = Vector2(0.8434659, 1.0298008)
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1502090772]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uaj1o")
+theme_override_font_sizes/font_size = 87
+text = "How To Play"
+horizontal_alignment = 1
+
+[node name="Label7" type="Label" parent="VBoxContainer" unique_id=770287323]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uaj1o")
+theme_override_font_sizes/font_size = 32
+text = "​Welcome to Bounce Out!
+You are a young spring chick encountering bouncy monsters as you travel.
+Bounce is life, collect score using pinballs to damage your enemies!
+​How to play:
+Launch up balls into the arena
+Bounce them using walls, bouncers, and flippers to increase your score
+Gain upgrades and abilities to defeat harder monsters
+A & D to control flippers
+W & S to change launch speed
+Space to launch!
+
+
+"
+horizontal_alignment = 1
+
+[node name="Label5" type="Label" parent="VBoxContainer" unique_id=1713471044]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uaj1o")
+theme_override_font_sizes/font_size = 32
+text = "Tutorial
+Bouncers, pegs, and flippers give points
+Every 10 points you do 1 damage
+After every boss you gain 1 upgrade/ability
+You can hold as many upgrades as you like, but only 1 ability at a time   
+
+"
+horizontal_alignment = 1
+
+[node name="PauseMenu" parent="." unique_id=237595338 instance=ExtResource("2_yowti")]
+layout_mode = 1

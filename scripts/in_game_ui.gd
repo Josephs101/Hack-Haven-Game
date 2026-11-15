@@ -130,6 +130,7 @@ func _ready() -> void:
 
 	_style_value_labels()
 	_build_ability_icon()
+	modifiers_list.add_theme_constant_override("separation", 2)
 	_on_score_changed(GameStats.score)
 	_on_combo_changed(GameStats.combo, GameStats.multiplier)
 	_on_boss_name_changed(GameStats.boss_name)
@@ -470,7 +471,7 @@ func _setup_pinball_sound() -> void:
 	for i in range(PINBALL_VOICES):
 		var player := AudioStreamPlayer.new()
 		player.stream = PINBALL_SOUND
-		player.volume_db = 18.0
+		player.volume_db = 24.0
 		player.process_mode = Node.PROCESS_MODE_ALWAYS
 		add_child(player)
 		_pinball_players.append(player)
@@ -567,11 +568,13 @@ func _on_upgrades_changed() -> void:
 
 	for upgrade in GameStats.get_upgrades():
 		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 3)
+		row.add_theme_constant_override("separation", 2)
 
 		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(10, 10)
+		icon.custom_minimum_size = Vector2(50, 50)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		icon.texture = _load_upgrade_icon(upgrade)
 		row.add_child(icon)
 

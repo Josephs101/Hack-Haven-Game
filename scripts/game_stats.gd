@@ -26,7 +26,7 @@ signal points_awarded(amount: int, world_position: Vector2)
 # banked for the level so far. The centre-screen damage readout listens to this.
 signal ball_damage(amount: int, total: int)
 
-const BASE_HIT_POINTS := 10
+const BASE_HIT_POINTS := 5
 const MULTIPLIER_PER_COMBO := 0.1
 const POINTS_PER_DAMAGE := 10
 const COMBO_WINDOW := 2.0
@@ -36,17 +36,17 @@ const ABILITY_COOLDOWN := 15.0
 # "boss_frames" is optional: a SpriteFrames resource that replaces the boss art
 # baked into InGameUI.tscn. Leave it out to keep the default slime.
 const LEVELS := {
-	1: {"name": "john bounceback slime", "max_hp": 10, "balls": 3, "rounds": 1},
+	1: {"name": "John /'Bounceback/' Slime", "max_hp": 100, "balls": 3, "rounds": 1},
 	2: {
-		"name": "basketclops",
-		"max_hp": 150,
+		"name": "BasketClops",
+		"max_hp": 200,
 		"balls": 3,
 		"rounds": 2,
 		"boss_frames": "res://assets/sprites/cyclops_frames.tres",
 	},
 	3: {
-		"name": "john bounceback slime jr.",
-		"max_hp": 200,
+		"name": "John /'Bounceback/' Slime Jr.",
+		"max_hp": 1000,
 		"balls": 4,
 		"rounds": 2,
 		"boss_frames": "res://assets/sprites/mini_frames.tres",
@@ -61,9 +61,9 @@ const ENDLESS_BASE_HP := 220.0
 const ENDLESS_HP_GROWTH := 1.18
 
 const ENDLESS_BOSSES := [
-	{"name": "john bounceback slime", "frames": ""},
-	{"name": "basketclops", "frames": "res://assets/sprites/cyclops_frames.tres"},
-	{"name": "john bounceback slime jr.", "frames": "res://assets/sprites/mini_frames.tres"},
+	{"name": "John /'Bounceback/' Slime", "frames": ""},
+	{"name": "BasketClops", "frames": "res://assets/sprites/cyclops_frames.tres"},
+	{"name": "John /'Bounceback/' Slime Jr.", "frames": "res://assets/sprites/mini_frames.tres"},
 ]
 
 # Best run ever, and how many bosses the current run has cleared. The record is
@@ -81,7 +81,7 @@ const UPGRADES := {
 		"icon": "res://assets/sprites/extra_ball.png",
 	},
 	"heavy_bones": {
-		"name": "HEAVY BONES",
+		"name": "TUNGSTEN BALLS ",
 		"desc": "+50% boss damage",
 		"icon": "res://assets/sprites/heavy_bones.png",
 	},
