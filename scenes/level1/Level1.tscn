@@ -32,10 +32,10 @@ position = Vector2(-24, 30)
 rotation = 3.1415927
 
 [node name="Flippers3" parent="." unique_id=1668924306 instance=ExtResource("2_e5fgp")]
-position = Vector2(286, 853)
+position = Vector2(341, 302)
 
 [node name="Flippers4" parent="." unique_id=1322207619 instance=ExtResource("7_flipr")]
-position = Vector2(670, 853)
+position = Vector2(626, 298)
 
 [node name="BlueBar" parent="." unique_id=596818552 instance=ExtResource("8_bar")]
 position = Vector2(390, 500)

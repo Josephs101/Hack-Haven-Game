@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="3_h61rw"]
 [ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="4_fcv5n"]
 [ext_resource type="AudioStream" uid="uid://c323x6f1uh3ee" path="res://assets/sound/TITLE.mp3" id="5_fcv5n"]
+[ext_resource type="PackedScene" uid="uid://vd5axdkp4l75" path="res://scenes/gameplay/SpringChicken.tscn" id="6_4v6gu"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fcv5n"]
 load_path = "res://.godot/imported/sky_ (1).png-7e1439327f1afef9bfe94e3f490c1e11.ctex"
@@ -160,3 +161,7 @@ theme_override_font_sizes/font_size = 34
 text = "BEST: 0 BOSSES"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="SpringChicken" parent="." unique_id=1277785348 instance=ExtResource("6_4v6gu")]
+position = Vector2(977.0001, 511)
+scale = Vector2(5, 5)
