@@ -10,8 +10,10 @@ extends Control
 @export var max_jump_interval: float = 5.0
 @onready var combo_value: Label = %ComboValue
 @onready var boss_name_label: Label = %BossName
+@onready var modifiers_list: VBoxContainer = %ModifiersList
 
 var _boss_tween: Tween = null
+const HUD_FONT := preload("res://assets/font(s)/Minecraft.ttf")
 
 var rng = RandomNumberGenerator.new()
 
@@ -22,6 +24,7 @@ func _ready() -> void:
 	GameStats.boss_name_changed.connect(_on_boss_name_changed)
 	GameStats.balls_changed.connect(_on_balls_changed)
 	GameStats.rounds_changed.connect(_on_rounds_changed)
+	GameStats.upgrades_changed.connect(_on_upgrades_changed)
 
 	boss_bar.max_value = GameStats.boss_max_hp
 	boss_bar.value = GameStats.boss_hp
@@ -32,6 +35,7 @@ func _ready() -> void:
 	_on_boss_name_changed(GameStats.boss_name)
 	_on_balls_changed(GameStats.balls_left)
 	_on_rounds_changed(GameStats.rounds_left)
+	_on_upgrades_changed()
 
 	rng.randomize()
 	boss_sprite.animation_finished.connect(_on_boss_animation_finished)
@@ -90,3 +94,39 @@ func _on_boss_animation_finished() -> void:
 	if boss_sprite.animation == "bouncy":
 		boss_sprite.play("idle")
 		_schedule_boss_jump()
+
+
+func _on_upgrades_changed() -> void:
+	for child in modifiers_list.get_children():
+		child.queue_free()
+
+	for upgrade in GameStats.get_upgrades():
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+
+		var icon := TextureRect.new()
+		icon.custom_minimum_size = Vector2(32, 32)
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture = _load_upgrade_icon(upgrade)
+		row.add_child(icon)
+
+		var label := Label.new()
+		label.add_theme_font_override("font", HUD_FONT)
+		label.text = str(upgrade.get("name", ""))
+		label.add_theme_font_size_override("font_size", 16)
+		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(label)
+
+		modifiers_list.add_child(row)
+
+
+func _load_upgrade_icon(upgrade: Dictionary) -> Texture2D:
+	var path: String = upgrade.get("icon", "")
+	if path != "" and ResourceLoader.exists(path):
+		var res = load(path)
+		if res is Texture2D:
+			return res
+
+	var img := Image.create_empty(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill(upgrade.get("color", Color.WHITE))
+	return ImageTexture.create_from_image(img)

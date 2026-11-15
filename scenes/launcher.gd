@@ -18,6 +18,7 @@ var _charge_time := 0.0
 var _power := 0.0
 var _can_launch := true
 var _pending_ball: RigidBody2D = null
+var _pending_extra: RigidBody2D = null
 var _pending_power := 0.0
 
 func _ready() -> void:
@@ -63,6 +64,11 @@ func _confirm_launch() -> void:
 	_pending_ball = _waiting_ball
 	_waiting_ball = null
 	_pending_power = _power
+
+	_pending_extra = null
+	if GameStats.multiball_enabled:
+		_pending_extra = _make_pending_ball()
+		GameStats.active_balls += 1
 
 	anim.play("launch")
 
@@ -111,16 +117,32 @@ func _on_spring_frame_changed() -> void:
 	_launch_pending_ball()
 	
 func _launch_pending_ball() -> void:
-	var ball := _pending_ball
-	_pending_ball = null
+	var balls: Array[RigidBody2D] = []
+	if _pending_ball != null:
+		balls.append(_pending_ball)
+		_pending_ball = null
+	if _pending_extra != null:
+		balls.append(_pending_extra)
+		_pending_extra = null
 
-	ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+	for ball in balls:
+		ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+		ball.freeze = false
+		ball.sleeping = false
+		ball.collision_layer = _waiting_layer
+		ball.collision_mask = _waiting_mask
+		ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power) * GameStats.speed_multiplier
 
-	ball.freeze = false
-	ball.sleeping = false
-	ball.collision_layer = _waiting_layer
-	ball.collision_mask = _waiting_mask
-	ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power)
+
+func _make_pending_ball() -> RigidBody2D:
+	var ball = ball_scene.instantiate()
+	ball.freeze = true
+	ball.sleeping = true
+	ball.collision_layer = 0
+	ball.collision_mask = 0
+	get_parent().add_child(ball)
+	ball.global_position = spawn.global_position
+	return ball
 
 
 func arm() -> void:

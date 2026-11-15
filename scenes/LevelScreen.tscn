@@ -2,15 +2,25 @@
 
 [ext_resource type="Script" uid="uid://d3fllhpsu5wyc" path="res://scripts/level_screen.gd" id="1_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://djkd6f5gk1l6u" path="res://scenes/InGameUI.tscn" id="1_wbs0h"]
+[ext_resource type="Texture2D" uid="uid://b2ond01r7qu3b" path="res://assets/sprites/sky_.png" id="2_6dn54"]
 [ext_resource type="PackedScene" uid="uid://ccrsgcupr7fsv" path="res://scenes/game_over.tscn" id="3_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="4_016qk"]
 [ext_resource type="PackedScene" uid="uid://bschmwy2efxap" path="res://scenes/gameplay/pinballTable.tscn" id="5_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://dtxwfc3pqwx0" path="res://scenes/launcher.tscn" id="6_016qk"]
-[ext_resource type="PackedScene" uid="uid://cx5p8ck3issmc" path="res://scenes/round clear.tscn" id="7_round"]
-[ext_resource type="PackedScene" uid="uid://dq24n7i3kw33t" path="res://scenes/UpgradeScreen.tscn" id="8_upgrade"]
+[ext_resource type="PackedScene" uid="uid://dpakv87bg356a" path="res://scenes/round clear.tscn" id="7_round"]
+[ext_resource type="PackedScene" uid="uid://ct8wf4shb1s20" path="res://scenes/UpgradeScreen.tscn" id="8_upgrade"]
 
 [node name="LevelScreen" type="Node2D" unique_id=366287594]
 script = ExtResource("1_qdpy8")
+
+[node name="Parallax2D" type="Parallax2D" parent="." unique_id=507089392]
+repeat_size = Vector2(12960, 0)
+autoscroll = Vector2(200, 0)
+ignore_camera_scroll = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Parallax2D" unique_id=196913033]
+position = Vector2(129, 548)
+texture = ExtResource("2_6dn54")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=509355009]
 offset_right = 1092.0
@@ -28,6 +38,7 @@ visible = false
 visible = false
 
 [node name="RoundClear" parent="UI" unique_id=665306670 instance=ExtResource("7_round")]
+visible = false
 
 [node name="UpgradeScreen" parent="UI" unique_id=1539693046 instance=ExtResource("8_upgrade")]
 visible = false

@@ -33,8 +33,8 @@ func _on_round_continue() -> void:
 	upgrade_screen.open()
 
 
-func _on_upgrade_chosen(upgrade: Dictionary) -> void:
-	GameStats.apply_upgrade(upgrade)
+func _on_upgrade_chosen(upgrade_id: String) -> void:
+	GameStats.apply_upgrade(upgrade_id)
 	GameStats.start_level(GameStats.current_level + 1)
 
 	if next_level_scene != "":

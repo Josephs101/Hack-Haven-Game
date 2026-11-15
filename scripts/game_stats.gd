@@ -8,6 +8,7 @@ signal balls_changed(left: int)
 signal rounds_changed(left: int)
 signal ball_set_finished(damage_dealt: int, boss_hp: int)
 signal boss_defeated
+signal upgrades_changed
 
 const BASE_HIT_POINTS := 10
 const MULTIPLIER_PER_COMBO := 0.1
@@ -19,6 +20,41 @@ const LEVELS := {
 	1: {"name": "john bounceback slime", "max_hp": 10, "balls": 3, "rounds": 1},
 	2: {"name": "basketclops", "max_hp": 150, "balls": 3, "rounds": 2},
 	3: {"name": "john bounceback slime jr.", "max_hp": 200, "balls": 4, "rounds": 2},
+}
+
+# Upgrade catalogue. "icon" is the PNG you drop into assets/icons/.
+# "color" is used as a fallback if the icon file is missing.
+const UPGRADES := {
+	"extra_ball": {
+		"name": "EXTRA BALL",
+		"desc": "+1 ball every round",
+		"icon": "res://assets/icons/extra_ball.png",
+		"color": Color(0.35, 0.8, 1.0),
+	},
+	"heavy_bones": {
+		"name": "HEAVY BONES",
+		"desc": "+50% boss damage",
+		"icon": "res://assets/sprites/heavy_bones.png",
+		"color": Color(1.0, 0.45, 0.3),
+	},
+	"low_gravity": {
+		"name": "LOW GRAVITY",
+		"desc": "Balls fall slower",
+		"icon": "res://assets/sprites/low_gravity.png",
+		"color": Color(0.6, 0.5, 1.0),
+	},
+	"ultraspeed": {
+		"name": "ULTRASPEED",
+		"desc": "+50% launch speed",
+		"icon": "res://assets/icons/ultraspeed.png",
+		"color": Color(1.0, 0.85, 0.2),
+	},
+	"multiball": {
+		"name": "MULTIBALL",
+		"desc": "+1 ball per launch",
+		"icon": "res://assets/icons/multiball.png",
+		"color": Color(1.0, 0.4, 0.7),
+	},
 }
 
 var current_level := 1
@@ -38,6 +74,13 @@ var balls_left := 3
 var active_balls := 0
 var pending_points := 0
 var upgrades: Array[Dictionary] = []
+
+# Run-wide modifiers applied by upgrades.
+var extra_balls := 0
+var damage_multiplier := 1.0
+var gravity_multiplier := 1.0
+var speed_multiplier := 1.0
+var multiball_enabled := false
 
 var _combo_time := 0.0
 var _boss_down_emitted := false
@@ -59,6 +102,7 @@ func _process(delta: float) -> void:
 # Call this when starting a brand-new run.
 func start_run(level_number: int = 1) -> void:
 	score = 0
+	_reset_upgrades()
 	start_level(level_number)
 
 
@@ -85,7 +129,7 @@ func start_level(level_number: int) -> void:
 
 
 func start_ball_set() -> void:
-	balls_left = balls_per_set
+	balls_left = balls_per_set + extra_balls
 	active_balls = 0
 	pending_points = 0
 	combo = 0
@@ -147,7 +191,7 @@ func consume_round() -> bool:
 
 
 func finish_ball_set() -> void:
-	var damage := pending_points / POINTS_PER_DAMAGE
+	var damage := int(round(pending_points / float(POINTS_PER_DAMAGE) * damage_multiplier))
 	pending_points = 0
 
 	break_combo()
@@ -185,5 +229,45 @@ func set_balls(value: int) -> void:
 	balls_changed.emit(balls_left)
 
 
-func apply_upgrade(upgrade: Dictionary) -> void:
-	upgrades.append(upgrade)
+func apply_upgrade(id: String) -> void:
+	if not UPGRADES.has(id):
+		return
+
+	var data: Dictionary = UPGRADES[id].duplicate()
+	data["id"] = id
+	upgrades.append(data)
+
+	match id:
+		"extra_ball":
+			extra_balls += 1
+		"heavy_bones":
+			damage_multiplier += 0.5
+		"low_gravity":
+			gravity_multiplier = 0.5
+		"ultraspeed":
+			speed_multiplier += 0.3
+		"multiball":
+			multiball_enabled = true
+
+	upgrades_changed.emit()
+
+
+func has_upgrade(id: String) -> bool:
+	for u in upgrades:
+		if u.get("id", "") == id:
+			return true
+	return false
+
+
+func get_upgrades() -> Array[Dictionary]:
+	return upgrades
+
+
+func _reset_upgrades() -> void:
+	upgrades.clear()
+	extra_balls = 0
+	damage_multiplier = 1.0
+	gravity_multiplier = 1.0
+	speed_multiplier = 1.0
+	multiball_enabled = false
+	upgrades_changed.emit()
