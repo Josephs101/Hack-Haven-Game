@@ -8,23 +8,40 @@ signal balls_changed(left: int)
 signal rounds_changed(left: int)
 signal ball_set_finished(damage_dealt: int, boss_hp: int)
 signal boss_defeated
+signal boss_visual_changed(frames_path: String)
 
 const BASE_HIT_POINTS := 10
 const MULTIPLIER_PER_COMBO := 0.1
 const POINTS_PER_DAMAGE := 10
 const COMBO_WINDOW := 2.0
 
+# Boss HP grows by this fraction of its base value every time the level list
+# wraps back around to the first boss. Set to 0.0 for identical repeat runs.
+const LOOP_HP_GROWTH := 0.25
+
 # Add new levels here. No scoring code needs to change.
+# "boss_frames" is optional: a SpriteFrames resource that replaces the boss art
+# baked into InGameUI.tscn. Leave it out to keep the default slime.
 const LEVELS := {
 	1: {"name": "john bounceback slime", "max_hp": 10, "balls": 3, "rounds": 1},
-	2: {"name": "basketclops", "max_hp": 150, "balls": 3, "rounds": 2},
+	2: {
+		"name": "basketclops",
+		"max_hp": 150,
+		"balls": 3,
+		"rounds": 2,
+		"boss_frames": "res://assets/sprites/cyclops_frames.tres",
+	},
+	# TODO: drop the third boss sheet into assets/sprites, copy
+	# cyclops_frames.tres for it and point "boss_frames" at the copy.
 	3: {"name": "john bounceback slime jr.", "max_hp": 200, "balls": 4, "rounds": 2},
 }
 
 var current_level := 1
+var loop_index := 0
 var balls_per_set := 3
 var rounds_per_boss := 1
 var rounds_left := 1
+var boss_frames_path := ""
 
 var score := 0
 var combo := 0
@@ -59,27 +76,31 @@ func _process(delta: float) -> void:
 # Call this when starting a brand-new run.
 func start_run(level_number: int = 1) -> void:
 	score = 0
+	loop_index = 0
 	start_level(level_number)
 
 
 # Call this when moving to the next level/boss.
 # Score is preserved between levels.
 func start_level(level_number: int) -> void:
-	var data: Dictionary = LEVELS.get(level_number, LEVELS[1])
+	var level := wrap_level(level_number)
+	var data: Dictionary = LEVELS[level]
 
-	current_level = level_number
+	current_level = level
 	balls_per_set = int(data["balls"])
 	rounds_per_boss = int(data.get("rounds", 1))
 	rounds_left = rounds_per_boss
 
 	boss_name = str(data["name"])
-	boss_max_hp = int(data["max_hp"])
+	boss_max_hp = _scaled_hp(int(data["max_hp"]))
 	boss_hp = boss_max_hp
+	boss_frames_path = str(data.get("boss_frames", ""))
 	_boss_down_emitted = false
 
 	start_ball_set()
 
 	boss_name_changed.emit(boss_name)
+	boss_visual_changed.emit(boss_frames_path)
 	boss_health_changed.emit(boss_hp, boss_max_hp)
 	rounds_changed.emit(rounds_left)
 
@@ -96,6 +117,52 @@ func start_ball_set() -> void:
 	score_changed.emit(score)
 	combo_changed.emit(combo, multiplier)
 	balls_changed.emit(balls_left)
+
+
+# Returns every level number in play order (1, 2, 3, ...).
+func level_numbers() -> Array[int]:
+	var numbers: Array[int] = []
+	for key in LEVELS.keys():
+		numbers.append(int(key))
+	numbers.sort()
+	return numbers
+
+
+func first_level() -> int:
+	return level_numbers()[0]
+
+
+func last_level() -> int:
+	var numbers := level_numbers()
+	return numbers[numbers.size() - 1]
+
+
+# Folds any number into the defined levels: after the last boss it wraps back
+# to the first (4 -> 1, 5 -> 2, ...). Pure: it never changes loop_index.
+func wrap_level(level_number: int) -> int:
+	var numbers := level_numbers()
+
+	if numbers.has(level_number):
+		return level_number
+
+	return numbers[posmod(level_number - numbers[0], numbers.size())]
+
+
+# Called when a boss is beaten and the upgrade has been picked.
+# Returns the level that should be loaded next, wrapping past the last boss.
+func advance_level() -> int:
+	var next := current_level + 1
+
+	if next > last_level():
+		next = first_level()
+		loop_index += 1
+
+	current_level = next
+	return next
+
+
+func _scaled_hp(base_hp: int) -> int:
+	return int(round(float(base_hp) * (1.0 + LOOP_HP_GROWTH * float(loop_index))))
 
 
 # Restart current level with a clean run score.
