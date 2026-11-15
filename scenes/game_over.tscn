@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dkogwy31c543" path="res://scripts/game_over.gd" id="1_wqhvx"]
 [ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="2_tbwuq"]
 [ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="3_racf3"]
+[ext_resource type="AudioStream" uid="uid://ctb365su32ubm" path="res://assets/sound/EVIL DEFEAT.mp3" id="4_racf3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7m3ot"]
 atlas = ExtResource("2_tbwuq")
@@ -86,3 +87,8 @@ theme_override_fonts/font = ExtResource("3_racf3")
 theme_override_font_sizes/font_size = 32
 text = "Restart"
 flat = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=446070401]
+stream = ExtResource("4_racf3")
+volume_db = 24.0
+autoplay = false

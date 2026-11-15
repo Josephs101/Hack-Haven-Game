@@ -1913,7 +1913,7 @@ normal = Vector2(1, 0)
 distance = 28.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jcuo5"]
-size = Vector2(43.825974, 659.0478)
+size = Vector2(43.825974, 773.0076)
 
 [node name="pinballTable" type="Node2D" unique_id=282973260]
 
@@ -1989,7 +1989,7 @@ texture = ExtResource("3_wxaqx")
 [node name="StaticBody2D7" type="StaticBody2D" parent="." unique_id=360194839]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D7" unique_id=1188076247]
-position = Vector2(178.491, 587.5163)
+position = Vector2(178.59406, 644.49615)
 rotation = -0.0018088818
 shape = SubResource("RectangleShape2D_jcuo5")
 one_way_collision = true

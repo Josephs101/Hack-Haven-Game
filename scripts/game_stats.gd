@@ -10,15 +10,20 @@ signal ball_set_finished(damage_dealt: int, boss_hp: int)
 signal boss_defeated
 signal boss_visual_changed(frames_path: String)
 signal upgrades_changed
+signal ability_changed(id: String)
 
 # Fired whenever the ball touches a peg, with the combo after that hit. Used
 # for the impact-frame effect; bumpers and flippers deliberately don't emit it.
 signal peg_hit(combo: int)
 
+# Fired whenever a ball hits a bumper.
+signal bouncer_hit
+
 const BASE_HIT_POINTS := 10
 const MULTIPLIER_PER_COMBO := 0.1
 const POINTS_PER_DAMAGE := 10
 const COMBO_WINDOW := 2.0
+const ABILITY_COOLDOWN := 15.0
 
 # Add new levels here. No scoring code needs to change.
 # "boss_frames" is optional: a SpriteFrames resource that replaces the boss art
@@ -90,6 +95,29 @@ const UPGRADES := {
 	},
 }
 
+# Abilities: one slot, chosen from the upgrade screen and used with F.
+const ABILITIES := {
+	"top_balls": {
+		"name": "TOP BALLS",
+		"short": "TOP",
+		"desc": "Send every ball to the top of the table",
+		"icon": "res://assets/sprites/top_balls.png",
+	},
+	"split_ball": {
+		"name": "SPLIT BALL",
+		"short": "SPLIT",
+		"desc": "Split the highest ball into three",
+		"icon": "res://assets/sprites/split_balls.png",
+	},
+	"bouncy_walls": {
+		"name": "BOUNCY WALLS",
+		"short": "BOUNCE",
+		"desc": "Make the table walls bouncier",
+		"icon": "res://assets/sprites/bouncy_wall.png",
+		"color": Color(0.6, 1.0, 0.5),
+	},
+}
+
 var current_level := 1
 var balls_per_set := 3
 var rounds_per_boss := 1
@@ -119,6 +147,8 @@ var damage_multiplier := 1.0
 var gravity_multiplier := 1.0
 var speed_multiplier := 1.0
 var multiball_extra := 0
+var current_ability := ""
+var ability_cooldown := 0.0
 
 var _combo_time := 0.0
 var _boss_down_emitted := false
@@ -130,6 +160,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if ability_cooldown > 0.0:
+		ability_cooldown = maxf(0.0, ability_cooldown - delta)
+
 	if combo <= 0:
 		return
 
@@ -143,6 +176,7 @@ func start_run(level_number: int = 1) -> void:
 	score = 0
 	bosses_beaten = 0
 	_reset_upgrades()
+	_reset_ability()
 	start_level(level_number)
 
 
@@ -160,6 +194,7 @@ func start_level(level_number: int) -> void:
 	score = 0
 	pending_points = 0
 	level_damage = 0
+	ability_cooldown = 0.0
 
 	boss_name = str(data["name"])
 	boss_max_hp = int(data["max_hp"])
@@ -373,6 +408,47 @@ func has_upgrade(id: String) -> bool:
 
 func get_upgrades() -> Array[Dictionary]:
 	return upgrades
+
+
+func has_ability(id: String) -> bool:
+	return current_ability == id
+
+
+func set_ability(id: String) -> void:
+	if not ABILITIES.has(id):
+		return
+	current_ability = id
+	ability_cooldown = 0.0
+	ability_changed.emit(current_ability)
+
+
+# Returns false while the ability is on cooldown.
+func try_use_ability() -> bool:
+	if current_ability == "" or ability_cooldown > 0.0:
+		return false
+
+	ability_cooldown = ABILITY_COOLDOWN
+	return true
+
+
+func get_ability_name() -> String:
+	if ABILITIES.has(current_ability):
+		return str(ABILITIES[current_ability]["name"])
+	return "NONE"
+
+
+func get_offer(id: String) -> Dictionary:
+	if UPGRADES.has(id):
+		return UPGRADES[id]
+	if ABILITIES.has(id):
+		return ABILITIES[id]
+	return {}
+
+
+func _reset_ability() -> void:
+	current_ability = ""
+	ability_cooldown = 0.0
+	ability_changed.emit(current_ability)
 
 
 func _reset_upgrades() -> void:

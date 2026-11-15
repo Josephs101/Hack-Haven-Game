@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://3ooon1hgk15k"]
+[gd_scene format=3 uid="uid://d4brsu00t52y3"]
 
 [ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
 [ext_resource type="Script" path="res://scenes/level1.gd" id="1_eugj0"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dk1025l1hjsa7" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
 [ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="7_flipr"]
 [ext_resource type="AudioStream" uid="uid://cyfe8s4aqe3u2" path="res://assets/sound/SLIME 2.mp3" id="7_v8ldn"]
-[ext_resource type="PackedScene" uid="uid://dw76a2d1tnpk1" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
+[ext_resource type="PackedScene" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
 
 [node name="Level3" type="Node2D" unique_id=1978717256]
 script = ExtResource("1_eugj0")
@@ -110,7 +110,7 @@ position = Vector2(665, 760)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=781370146]
 stream = ExtResource("7_v8ldn")
-volume_db = 20.0
+volume_db = 10.0
 autoplay = true
 
 [editable path="Flippers2"]

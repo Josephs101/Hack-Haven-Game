@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bew01jfprilr"]
 
 [ext_resource type="Texture2D" uid="uid://bkl40r4bsg1ny" path="res://assets/sprites/rainbow_pins.png" id="1_rainbow"]
-[ext_resource type="Script" path="res://scripts/peg.gd" id="2_peg"]
+[ext_resource type="Script" uid="uid://dgn7gcuvgbnwe" path="res://scripts/peg.gd" id="2_peg"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ylhm0"]
 friction = 0.1
@@ -16,11 +16,9 @@ script = ExtResource("2_peg")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=509727277]
 scale = Vector2(2.75, 2.75)
-texture = SubResource("AtlasTexture_m1bjx")
 texture = ExtResource("1_rainbow")
 region_enabled = true
 region_rect = Rect2(0, 0, 16, 16)
-scale = Vector2(1.75, 1.75)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=965823464]
 scale = Vector2(1.5, 1.5)
