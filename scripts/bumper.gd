@@ -32,5 +32,4 @@ func _on_body_entered(body: Node2D) -> void:
 		body.linear_velocity = current_velocity + direction * additional_speed
 	
 	# Play Animation
-	sprite.play("bounce")
 	body.sleeping = false
