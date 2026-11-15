@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://csocqn4oj32a" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
 [ext_resource type="PackedScene" uid="uid://dk1025l1hjsa7" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
 [ext_resource type="AudioStream" uid="uid://dupifb45g8pyv" path="res://assets/sound/CYCLOPS.mp3" id="7_71yfb"]
+[ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="7_flipr"]
+[ext_resource type="PackedScene" uid="uid://dw76a2d1tnpk1" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
 
 [node name="Level2" type="Node2D" unique_id=1978717256]
 script = ExtResource("1_eugj0")
@@ -29,59 +31,77 @@ flip_h = true
 [node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1366285630, 2074405972) index="0" unique_id=1209279245]
 rotation = 3.1415927
 
-[node name="Peg1" parent="." unique_id=534931799 instance=ExtResource("5_eugj0")]
+[node name="Flippers3" parent="." unique_id=162558466 instance=ExtResource("2_e5fgp")]
+position = Vector2(340, 830)
+
+[node name="Flippers4" parent="." unique_id=180397796 instance=ExtResource("7_flipr")]
+position = Vector2(620, 830)
+
+[node name="BlueBar" parent="." unique_id=574250358 instance=ExtResource("8_bar")]
+position = Vector2(390, 480)
+
+[node name="BlueBar2" parent="." unique_id=968356764 instance=ExtResource("8_bar")]
+position = Vector2(570, 480)
+
+[node name="Sprite2D" parent="BlueBar2" index="0" unique_id=425023433]
+flip_h = true
+
+[node name="CollisionShape2D" parent="BlueBar2" index="1" unique_id=1290899404]
+rotation = -0.31415927
+
+[node name="Peg1" parent="." unique_id=121086051 instance=ExtResource("5_eugj0")]
 position = Vector2(650, 560)
 
-[node name="Peg2" parent="." unique_id=734006501 instance=ExtResource("5_eugj0")]
+[node name="Peg2" parent="." unique_id=929275473 instance=ExtResource("5_eugj0")]
 position = Vector2(600, 440)
 
-[node name="Peg3" parent="." unique_id=869054745 instance=ExtResource("5_eugj0")]
+[node name="Peg3" parent="." unique_id=1045215191 instance=ExtResource("5_eugj0")]
 position = Vector2(480, 390)
 
-[node name="Peg4" parent="." unique_id=1329425384 instance=ExtResource("5_eugj0")]
+[node name="Peg4" parent="." unique_id=1512156158 instance=ExtResource("5_eugj0")]
 position = Vector2(360, 440)
 
-[node name="Peg5" parent="." unique_id=473384259 instance=ExtResource("5_eugj0")]
+[node name="Peg5" parent="." unique_id=1174156333 instance=ExtResource("5_eugj0")]
 position = Vector2(310, 560)
 
-[node name="Peg6" parent="." unique_id=289103060 instance=ExtResource("5_eugj0")]
+[node name="Peg6" parent="." unique_id=456600019 instance=ExtResource("5_eugj0")]
 position = Vector2(360, 680)
 
-[node name="Peg7" parent="." unique_id=330697022 instance=ExtResource("5_eugj0")]
+[node name="Peg7" parent="." unique_id=606211507 instance=ExtResource("5_eugj0")]
 position = Vector2(480, 730)
 
-[node name="Peg8" parent="." unique_id=1720081739 instance=ExtResource("5_eugj0")]
+[node name="Peg8" parent="." unique_id=1923945263 instance=ExtResource("5_eugj0")]
 position = Vector2(600, 680)
 
-[node name="Peg9" parent="." unique_id=941053574 instance=ExtResource("5_eugj0")]
+[node name="Peg9" parent="." unique_id=217370178 instance=ExtResource("5_eugj0")]
 position = Vector2(400, 760)
 
-[node name="Peg10" parent="." unique_id=606377050 instance=ExtResource("5_eugj0")]
+[node name="Peg10" parent="." unique_id=722580210 instance=ExtResource("5_eugj0")]
 position = Vector2(560, 760)
 
-[node name="Peg11" parent="." unique_id=1386224715 instance=ExtResource("5_eugj0")]
+[node name="Peg11" parent="." unique_id=2047534061 instance=ExtResource("5_eugj0")]
 position = Vector2(280, 880)
 
-[node name="Peg12" parent="." unique_id=119927266 instance=ExtResource("5_eugj0")]
+[node name="Peg12" parent="." unique_id=601746513 instance=ExtResource("5_eugj0")]
 position = Vector2(680, 880)
 
-[node name="BlueBumper1" parent="." unique_id=1595558071 instance=ExtResource("6_vc60b")]
+[node name="BlueBumper1" parent="." unique_id=926603622 instance=ExtResource("6_vc60b")]
 position = Vector2(400, 560)
 
-[node name="BlueBumper2" parent="." unique_id=55647113 instance=ExtResource("6_vc60b")]
+[node name="BlueBumper2" parent="." unique_id=206974904 instance=ExtResource("6_vc60b")]
 position = Vector2(560, 560)
 
-[node name="RedBumper1" parent="." unique_id=1075608636 instance=ExtResource("5_ospsn")]
+[node name="RedBumper1" parent="." unique_id=1822166880 instance=ExtResource("5_ospsn")]
 position = Vector2(300, 340)
 
-[node name="RedBumper2" parent="." unique_id=1031020575 instance=ExtResource("5_ospsn")]
+[node name="RedBumper2" parent="." unique_id=2018383094 instance=ExtResource("5_ospsn")]
 position = Vector2(660, 340)
 
-[node name="RedBumper3" parent="." unique_id=1321172077 instance=ExtResource("5_ospsn")]
-position = Vector2(300, 800)
+[node name="RedBumper3" parent="." unique_id=1166034567 instance=ExtResource("5_ospsn")]
+position = Vector2(300, 750)
 
-[node name="RedBumper4" parent="." unique_id=577465889 instance=ExtResource("5_ospsn")]
-position = Vector2(660, 800)
+[node name="RedBumper4" parent="." unique_id=1989909377 instance=ExtResource("5_ospsn")]
+position = Vector2(660, 750)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1848325154]
 stream = ExtResource("7_71yfb")
@@ -89,3 +109,4 @@ volume_db = 24.0
 autoplay = true
 
 [editable path="Flippers2"]
+[editable path="BlueBar2"]

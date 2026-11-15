@@ -23,6 +23,17 @@ bg_color = Color(0, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ldle"]
 bg_color = Color(1, 0, 0, 1)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bossfill"]
+atlas = ExtResource("2_5ldle")
+region = Rect2(10, 179, 97, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bossfill"]
+texture = SubResource("AtlasTexture_bossfill")
+texture_margin_left = 12.0
+texture_margin_top = 6.0
+texture_margin_right = 12.0
+texture_margin_bottom = 6.0
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_5ldle"]
 atlas = ExtResource("2_5ldle")
 region = Rect2(0, 144.08965, 112.23341, 32.905945)
@@ -700,9 +711,9 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_left = -273.00003
-offset_top = 30.000002
+offset_top = 24.0
 offset_right = -263.02002
-offset_bottom = 106.0
+offset_bottom = 100.0
 grow_horizontal = 2
 scale = Vector2(1.595, 1.595)
 theme_override_styles/panel = SubResource("StyleBoxEmpty_5ldle")
@@ -776,9 +787,16 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 2
 
-[node name="BossName" type="Label" parent="TopBar/Margin/Row/BossBlock" unique_id=866398202]
-unique_name_in_owner = true
+[node name="BossNameSlot" type="Control" parent="TopBar/Margin/Row/BossBlock" unique_id=866398203]
+custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
+
+[node name="BossName" type="Label" parent="TopBar/Margin/Row/BossBlock/BossNameSlot" unique_id=866398202]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = -14.0
+offset_right = 266.1
+offset_bottom = 8.0
 theme_override_fonts/font = ExtResource("2_6e2fk")
 theme_override_font_sizes/font_size = 18
 text = "BOSS"
@@ -789,7 +807,7 @@ custom_minimum_size = Vector2(291.695, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/background = SubResource("StyleBoxFlat_6e2fk")
-theme_override_styles/fill = SubResource("StyleBoxFlat_5ldle")
+theme_override_styles/fill = SubResource("StyleBoxTexture_bossfill")
 value = 100.0
 show_percentage = false
 
@@ -917,6 +935,7 @@ frame_progress = 0.38425758
 [node name="DamageOverlay" type="AnimatedSprite2D" parent="TextureRect" unique_id=731649902]
 unique_name_in_owner = true
 visible = false
+speed_scale = 0.5
 position = Vector2(20.045042, 17.79279)
 scale = Vector2(0.98894984, 0.98895)
 sprite_frames = SubResource("SpriteFrames_uktmb")
@@ -974,3 +993,20 @@ anchor_bottom = 0.71
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 6
+
+[node name="BestReached" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.72
+anchor_right = 0.965
+anchor_bottom = 0.78
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.902, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.13, 0.07, 0.01, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_6e2fk")
+theme_override_font_sizes/font_size = 27
+text = "BEST: 0 BOSSES"
+horizontal_alignment = 1

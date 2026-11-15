@@ -1,13 +1,16 @@
 extends Node2D
 
-# Where each level leads. The keys are the boss order; the last entry loops back
-# to the first, so beating the final boss restarts at level 1 with tougher HP
-# (see GameStats.LOOP_HP_GROWTH). Add a level here and to GameStats.LEVELS.
+# Where each level leads. Levels 1-3 are authored scenes; anything beyond the
+# table falls back to the generated scene, so the game never runs out of levels.
+# Add a new authored level here and to GameStats.LEVELS.
 const LEVEL_SCENES := {
 	1: "res://scenes/level1/Level1.tscn",
 	2: "res://scenes/level2/Level2.tscn",
 	3: "res://scenes/level3/Level3.tscn",
 }
+
+# Everything past the authored levels is built from this scene at runtime.
+const GENERATED_LEVEL_SCENE := "res://scenes/generated/EndlessLevel.tscn"
 
 # Optional override. Left empty, the next scene comes from LEVEL_SCENES, which
 # gives the wrap-around for free. Set it to send this level somewhere unusual.
@@ -18,15 +21,22 @@ const LEVEL_SCENES := {
 @export var drain_size := Vector2(180.0, 70.0)
 @export_group("Screen Effects")
 ## Combo size at which the screen starts to shake.
-@export var combo_shake_threshold := 6
+@export var combo_shake_threshold := 8
 ## Peak shake distance in pixels while the combo is running hot.
-@export var max_shake_offset := 7.0
+@export var max_shake_offset := 4.5
 ## Extra zoom added per combo step, up to max_zoom_boost.
-@export var zoom_per_combo := 0.006
-## Cap on the zoom-in, so 0.08 means the view can reach 108%.
-@export var max_zoom_boost := 0.08
+@export var zoom_per_combo := 0.0045
+## Cap on the zoom-in, so 0.05 means the view can reach 105%.
+@export var max_zoom_boost := 0.05
 
 const SCREEN_FX := preload("res://scripts/screen_fx.gd")
+
+# Impact-frame flash + hitstop on high combos. One per level, on the UI layer.
+const IMPACT_FX := preload("res://scripts/impact_fx.gd")
+
+# DEVELOPER TOOL — remove this const and the _add_dev_tools() call below to
+# strip the instant-kill button. It also stays out of exported release builds.
+const DEV_TOOLS := preload("res://scripts/dev_tools.gd")
 
 @onready var round_clear: Control = $UI/RoundClear
 @onready var upgrade_screen: Control = $UI/UpgradeScreen
@@ -36,10 +46,22 @@ const SCREEN_FX := preload("res://scripts/screen_fx.gd")
 func _ready() -> void:
 	_create_arena_bounds()
 	_add_screen_fx()
+	_add_impact_fx()
+	_add_dev_tools()
 
 	GameStats.ball_set_finished.connect(_on_ball_set_finished)
 	round_clear.continue_pressed.connect(_on_round_continue)
 	upgrade_screen.upgrade_chosen.connect(_on_upgrade_chosen)
+
+
+# Sits on the UI layer so the shake/zoom never moves it.
+func _add_dev_tools() -> void:
+	$UI.add_child(DEV_TOOLS.new())
+
+
+# Also on the UI layer: the flash must stay screen-fixed and draw over the HUD.
+func _add_impact_fx() -> void:
+	$UI.add_child(IMPACT_FX.new())
 
 
 # Added in code so the shared LevelScreen scene stays free of a camera node and
@@ -83,7 +105,7 @@ func _load_next_level() -> void:
 	var scene_path := next_level_scene
 
 	if scene_path.is_empty():
-		scene_path = LEVEL_SCENES.get(next_level, "")
+		scene_path = LEVEL_SCENES.get(next_level, GENERATED_LEVEL_SCENE)
 
 	if scene_path.is_empty():
 		push_error("No scene configured for level %d" % next_level)
