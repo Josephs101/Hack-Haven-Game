@@ -9,13 +9,13 @@
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fcv5n"]
 load_path = "res://.godot/imported/sky_ (1).png-7e1439327f1afef9bfe94e3f490c1e11.ctex"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4v6gu"]
-atlas = ExtResource("3_h61rw")
-region = Rect2(33.42954, 224.35526, 61.177303, 31.86319)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_h61rw"]
 atlas = ExtResource("3_h61rw")
 region = Rect2(33.175827, 223.08192, 62.196922, 32.118088)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4v6gu"]
+atlas = ExtResource("3_h61rw")
+region = Rect2(33.42954, 224.35526, 61.177303, 31.86319)
 
 [node name="StartMenu" type="Control" unique_id=1863154916]
 layout_mode = 3
@@ -42,6 +42,30 @@ offset_right = 1253.0
 offset_bottom = 53.0
 scale = Vector2(1.33, 1.33)
 texture = ExtResource("2_h61rw")
+
+[node name="Credits" type="Button" parent="." unique_id=2143642899]
+layout_mode = 0
+offset_left = 324.0
+offset_top = 800.0
+offset_right = 723.0
+offset_bottom = 1028.0
+theme_override_font_sizes/font_size = 40
+icon = SubResource("AtlasTexture_h61rw")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="Label" type="Label" parent="Credits" unique_id=1934120900]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 14.0
+offset_right = 399.0
+offset_bottom = 211.0
+theme_override_fonts/font = ExtResource("4_fcv5n")
+theme_override_font_sizes/font_size = 53
+text = "CREDITS"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="NewRun" type="Button" parent="." unique_id=1429683210]
 unique_name_in_owner = true

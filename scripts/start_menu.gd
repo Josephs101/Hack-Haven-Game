@@ -7,7 +7,8 @@ func _ready() -> void:
 	get_tree().paused = false
 	%NewRun.pressed.connect(_on_new_run)
 	%Quit.pressed.connect(_on_quit)
-	# Remove Godot's focus outline on the flat menu buttons.
+	$Credits.pressed.connect(_on_credits)
+
 	for button in [%NewRun, %Quit]:
 		button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	%NewRun.grab_focus()
@@ -39,3 +40,7 @@ func _on_new_run() -> void:
 
 func _on_quit() -> void:
 	get_tree().quit()
+
+func _on_credits() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/credits.tscn")
