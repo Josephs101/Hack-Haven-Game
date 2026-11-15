@@ -17,9 +17,11 @@ var _charging := false
 var _charge_time := 0.0
 var _power := 0.0
 var _can_launch := true
-
+var _pending_ball: RigidBody2D = null
+var _pending_power := 0.0
 
 func _ready() -> void:
+	anim.frame_changed.connect(_on_spring_frame_changed)
 	_spawn_waiting_ball()
 
 
@@ -58,22 +60,17 @@ func _confirm_launch() -> void:
 
 	_can_launch = false
 
-	var ball := _waiting_ball
+	_pending_ball = _waiting_ball
 	_waiting_ball = null
+	_pending_power = _power
 
 	anim.play("launch")
-	await anim.animation_finished
 
-	ball.freeze = false
-	ball.sleeping = false
-	ball.collision_layer = _waiting_layer
-	ball.collision_mask = _waiting_mask
-	ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _power)
+	await anim.animation_finished
 
 	meter.set_power(0.0)
 	anim.play("default")
 
-	# Immediately prepare the next ball if the player has one left.
 	if GameStats.balls_left > 0:
 		await _spawn_waiting_ball()
 
@@ -101,6 +98,31 @@ func _spawn_waiting_ball() -> void:
 	ball.global_position = spawn.global_position
 
 
-func _on_ball_gone() -> void:
+
+
+func _on_spring_frame_changed() -> void:
+	if _pending_ball == null:
+		return
+	if anim.animation != &"launch":
+		return
+	if anim.frame < 14:
+		return
+	
+	_launch_pending_ball()
+	
+func _launch_pending_ball() -> void:
+	var ball := _pending_ball
+	_pending_ball = null
+
+	ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+
+	ball.freeze = false
+	ball.sleeping = false
+	ball.collision_layer = _waiting_layer
+	ball.collision_mask = _waiting_mask
+	ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power)
+
+
+func arm() -> void:
 	_can_launch = true
 	_spawn_waiting_ball()

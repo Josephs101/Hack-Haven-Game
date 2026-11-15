@@ -352,6 +352,10 @@ distance = -131.99991
 friction = 0.15
 bounce = 0.12
 
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jcuo5"]
+normal = Vector2(1, 0)
+distance = 28.0
+
 [node name="pinballTable" type="Node2D" unique_id=282973260]
 
 [node name="TileMapLayer2" type="TileMapLayer" parent="." unique_id=632621463]
@@ -392,7 +396,7 @@ shape = SubResource("RectangleShape2D_wxaqx")
 position = Vector2(0, 13)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Testing Barrier" unique_id=131790251]
-position = Vector2(461, 1011)
+position = Vector2(460, 1105)
 shape = SubResource("WorldBoundaryShape2D_p5d85")
 
 [node name="TopBarrier" type="StaticBody2D" parent="." unique_id=1641352813]
@@ -410,4 +414,10 @@ physics_material_override = SubResource("PhysicsMaterial_p5d85")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D5" unique_id=1638160873]
 position = Vector2(-2, -2)
 scale = Vector2(1.0070304, 1.0267383)
-polygon = PackedVector2Array(768, 255, 769, 5, 154, 2, 144, 256, 145, 1072, 160, 1072, 159, 256, 159.87602, 209.40099, 166.82715, 167.52078, 174.7713, 141.22392, 187.68054, 111.03121, 206.5479, 84.734344, 235.34544, 60.3854, 278.04523, 42.85415, 330.67523, 35.062485, 386.28427, 30.192698, 451.82352, 29.21874, 526.2999, 37.98436, 586.8741, 48.6979, 620.6367, 60.3854, 667.3086, 86.68226, 709.0154, 132.4583, 734.83386, 201.60931, 736, 257)
+polygon = PackedVector2Array(768, 255, 769, 5, 101.28791, 3.895832, 10.923206, 253.2291, 3.972075, 1074.2756, 160, 1072, 159, 256, 159.87602, 209.40099, 166.82715, 167.52078, 174.7713, 141.22392, 187.68054, 111.03121, 206.5479, 84.734344, 235.34544, 60.3854, 278.04523, 42.85415, 330.67523, 35.062485, 386.28427, 30.192698, 451.82352, 29.21874, 526.2999, 37.98436, 586.8741, 48.6979, 620.6367, 60.3854, 667.3086, 86.68226, 709.0154, 132.4583, 734.83386, 201.60931, 736, 257)
+
+[node name="StaticBody2D6" type="StaticBody2D" parent="." unique_id=2026726095]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D6" unique_id=597808786]
+position = Vector2(131, 969)
+shape = SubResource("WorldBoundaryShape2D_jcuo5")
