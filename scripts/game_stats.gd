@@ -15,6 +15,10 @@ signal upgrades_changed
 # for the impact-frame effect; bumpers and flippers deliberately don't emit it.
 signal peg_hit(combo: int)
 
+# Fired for every scoring contact, with the points gained and where in the world
+# it happened. The floating "+N" popups listen to this.
+signal points_awarded(amount: int, world_position: Vector2)
+
 const BASE_HIT_POINTS := 10
 const MULTIPLIER_PER_COMBO := 0.1
 const POINTS_PER_DAMAGE := 10
@@ -225,9 +229,9 @@ func reset() -> void:
 	start_run(1)
 
 
-func register_hit(base_points: int = BASE_HIT_POINTS) -> void:
+func register_hit(base_points: int = BASE_HIT_POINTS) -> int:
 	if boss_hp <= 0:
-		return
+		return 0
 
 	combo += 1
 	multiplier = 1.0 + float(combo - 1) * MULTIPLIER_PER_COMBO
@@ -239,6 +243,8 @@ func register_hit(base_points: int = BASE_HIT_POINTS) -> void:
 
 	score_changed.emit(score)
 	combo_changed.emit(combo, multiplier)
+
+	return gained
 
 
 func use_ball() -> bool:

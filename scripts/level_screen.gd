@@ -16,7 +16,7 @@ const GENERATED_LEVEL_SCENE := "res://scenes/generated/EndlessLevel.tscn"
 # gives the wrap-around for free. Set it to send this level somewhere unusual.
 @export_file("*.tscn") var next_level_scene := ""
 
-# Drain opening at the bottom of the funnel. Tune these in the Inspector.
+# Drain opening at the bottom of the funnel. 
 @export var drain_center := Vector2(480.0, 1075.0)
 @export var drain_size := Vector2(180.0, 70.0)
 @export_group("Screen Effects")
@@ -34,6 +34,9 @@ const SCREEN_FX := preload("res://scripts/screen_fx.gd")
 # Impact-frame flash + hitstop on high combos. One per level, on the UI layer.
 const IMPACT_FX := preload("res://scripts/impact_fx.gd")
 
+# Floating "+N" score popups, also on the UI layer.
+const SCORE_POPUPS := preload("res://scripts/score_popups.gd")
+
 # DEVELOPER TOOL — remove this const and the _add_dev_tools() call below to
 # strip the instant-kill button. It also stays out of exported release builds.
 const DEV_TOOLS := preload("res://scripts/dev_tools.gd")
@@ -47,6 +50,7 @@ func _ready() -> void:
 	_create_arena_bounds()
 	_add_screen_fx()
 	_add_impact_fx()
+	_add_score_popups()
 	_add_dev_tools()
 
 	GameStats.ball_set_finished.connect(_on_ball_set_finished)
@@ -62,6 +66,11 @@ func _add_dev_tools() -> void:
 # Also on the UI layer: the flash must stay screen-fixed and draw over the HUD.
 func _add_impact_fx() -> void:
 	$UI.add_child(IMPACT_FX.new())
+
+
+# Added last of the effects so the floats draw above the impact flash.
+func _add_score_popups() -> void:
+	$UI.add_child(SCORE_POPUPS.new())
 
 
 # Added in code so the shared LevelScreen scene stays free of a camera node and
