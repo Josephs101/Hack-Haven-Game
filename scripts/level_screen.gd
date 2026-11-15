@@ -1,6 +1,29 @@
 extends Node2D
 
+# Where each level leads. The keys are the boss order; the last entry loops back
+# to the first, so beating the final boss restarts at level 1 with tougher HP
+# (see GameStats.LOOP_HP_GROWTH). Add a level here and to GameStats.LEVELS.
+const LEVEL_SCENES := {
+	1: "res://scenes/level1/Level1.tscn",
+	2: "res://scenes/level2/Level2.tscn",
+	3: "res://scenes/level3/Level3.tscn",
+}
+
+# Optional override. Left empty, the next scene comes from LEVEL_SCENES, which
+# gives the wrap-around for free. Set it to send this level somewhere unusual.
 @export_file("*.tscn") var next_level_scene := ""
+
+@export_group("Screen Effects")
+## Combo size at which the screen starts to shake.
+@export var combo_shake_threshold := 6
+## Peak shake distance in pixels while the combo is running hot.
+@export var max_shake_offset := 7.0
+## Extra zoom added per combo step, up to max_zoom_boost.
+@export var zoom_per_combo := 0.006
+## Cap on the zoom-in, so 0.08 means the view can reach 108%.
+@export var max_zoom_boost := 0.08
+
+const SCREEN_FX := preload("res://scripts/screen_fx.gd")
 
 @onready var round_clear: Control = $UI/RoundClear
 @onready var upgrade_screen: Control = $UI/UpgradeScreen
@@ -9,10 +32,22 @@ extends Node2D
 
 func _ready() -> void:
 	_create_arena_bounds()
+	_add_screen_fx()
 
 	GameStats.ball_set_finished.connect(_on_ball_set_finished)
 	round_clear.continue_pressed.connect(_on_round_continue)
 	upgrade_screen.upgrade_chosen.connect(_on_upgrade_chosen)
+
+
+# Added in code so the shared LevelScreen scene stays free of a camera node and
+# does not collide with upgrade-screen work.
+func _add_screen_fx() -> void:
+	var fx = SCREEN_FX.new()
+	fx.shake_threshold = combo_shake_threshold
+	fx.max_offset = max_shake_offset
+	fx.zoom_per_combo = zoom_per_combo
+	fx.max_extra_zoom = max_zoom_boost
+	add_child(fx)
 
 
 func _on_ball_set_finished(damage: int, boss_hp: int) -> void:
@@ -33,12 +68,25 @@ func _on_round_continue() -> void:
 	upgrade_screen.open()
 
 
-func _on_upgrade_chosen(upgrade_id: String) -> void:
-	GameStats.apply_upgrade(upgrade_id)
-	GameStats.start_level(GameStats.current_level + 1)
+func _on_upgrade_chosen(upgrade: Dictionary) -> void:
+	GameStats.apply_upgrade(upgrade)
+	_load_next_level()
 
-	if next_level_scene != "":
-		get_tree().change_scene_to_file(next_level_scene)
+
+# Everything about the boss cycle lives here, so upgrade effects added to
+# _on_upgrade_chosen() above stay independent of scene loading.
+func _load_next_level() -> void:
+	var next_level := GameStats.advance_level()
+	var scene_path := next_level_scene
+
+	if scene_path.is_empty():
+		scene_path = LEVEL_SCENES.get(next_level, "")
+
+	if scene_path.is_empty():
+		push_error("No scene configured for level %d" % next_level)
+		return
+
+	get_tree().change_scene_to_file(scene_path)
 
 
 func _create_arena_bounds() -> void:
