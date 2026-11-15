@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://3unhg68ipx4b"]
 
-[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="2_58kob"]
+[ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="1_g3ijy"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_002rf"]
 friction = 0.1
 bounce = 0.8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1f6o"]
+atlas = ExtResource("1_g3ijy")
+region = Rect2(17.729628, 18.145897, 12.688217, 11.641766)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_58kob"]
 radius = 16.0
@@ -17,8 +21,8 @@ linear_damp = 0.1
 angular_damp = 1.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=189595511]
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_58kob")
+scale = Vector2(2.5, 2.5)
+texture = SubResource("AtlasTexture_h1f6o")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=697379121]
 shape = SubResource("CircleShape2D_58kob")

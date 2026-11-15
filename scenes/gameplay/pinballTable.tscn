@@ -348,6 +348,10 @@ distance = -20.0
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wxaqx"]
 distance = -131.99991
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_p5d85"]
+friction = 0.15
+bounce = 0.12
+
 [node name="pinballTable" type="Node2D" unique_id=282973260]
 
 [node name="TileMapLayer2" type="TileMapLayer" parent="." unique_id=632621463]
@@ -385,13 +389,14 @@ rotation = -0.37524578
 shape = SubResource("RectangleShape2D_wxaqx")
 
 [node name="Testing Barrier" type="StaticBody2D" parent="." unique_id=1774315481]
+position = Vector2(0, 13)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Testing Barrier" unique_id=131790251]
-position = Vector2(467, 1036)
+position = Vector2(461, 1011)
 shape = SubResource("WorldBoundaryShape2D_p5d85")
 
 [node name="TopBarrier" type="StaticBody2D" parent="." unique_id=1641352813]
-position = Vector2(73, 56)
+position = Vector2(57, -201)
 rotation = 3.1415927
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TopBarrier" unique_id=1449789206]
@@ -400,6 +405,9 @@ shape = SubResource("WorldBoundaryShape2D_wxaqx")
 one_way_collision = true
 
 [node name="StaticBody2D5" type="StaticBody2D" parent="." unique_id=101521861]
+physics_material_override = SubResource("PhysicsMaterial_p5d85")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D5" unique_id=1638160873]
-polygon = PackedVector2Array(768, 255, 769, 5, 154, 2, 144, 256, 145, 1072, 160, 1072, 159, 256, 177, 128, 207, 70, 273, 34, 329, 27, 399, 18, 486, 21, 578, 33, 646, 60, 701, 107, 734, 179, 736, 257)
+position = Vector2(-2, -2)
+scale = Vector2(1.0070304, 1.0267383)
+polygon = PackedVector2Array(768, 255, 769, 5, 154, 2, 144, 256, 145, 1072, 160, 1072, 159, 256, 159.87602, 209.40099, 166.82715, 167.52078, 174.7713, 141.22392, 187.68054, 111.03121, 206.5479, 84.734344, 235.34544, 60.3854, 278.04523, 42.85415, 330.67523, 35.062485, 386.28427, 30.192698, 451.82352, 29.21874, 526.2999, 37.98436, 586.8741, 48.6979, 620.6367, 60.3854, 667.3086, 86.68226, 709.0154, 132.4583, 734.83386, 201.60931, 736, 257)
