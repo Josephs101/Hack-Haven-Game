@@ -2,10 +2,13 @@
 
 [ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_myx47"]
 [ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="2_myx47"]
+[ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="3_kukqi"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kukqi"]
 atlas = ExtResource("2_myx47")
 region = Rect2(96.138275, 223.33351, 32.6279, 32.373)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5d2l8"]
 
 [node name="PauseMenu" type="Control" unique_id=237595338]
 process_mode = 3
@@ -16,15 +19,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_myx47")
-
-[node name="TextureRect" type="TextureRect" parent="." unique_id=602607728]
-custom_minimum_size = Vector2(500, 300)
-layout_mode = 0
-offset_left = 286.0
-offset_top = 315.0
-offset_right = 786.0
-offset_bottom = 738.0
-texture = SubResource("AtlasTexture_kukqi")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=667783994]
 layout_mode = 1
@@ -39,6 +33,15 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.14509805, 0.14509805, 0.14509805, 0.654902)
 
+[node name="TextureRect" type="TextureRect" parent="." unique_id=602607728]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 0
+offset_left = 286.0
+offset_top = 315.0
+offset_right = 786.0
+offset_bottom = 738.0
+texture = SubResource("AtlasTexture_kukqi")
+
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=569558144]
 layout_mode = 1
 anchors_preset = 15
@@ -50,6 +53,7 @@ grow_vertical = 2
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=586981699]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5d2l8")
 
 [node name="BoxContainer" type="BoxContainer" parent="CenterContainer/PanelContainer" unique_id=1105780820]
 layout_mode = 2
@@ -58,6 +62,7 @@ vertical = true
 
 [node name="PausedLabel" type="Label" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=1259542100]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_kukqi")
 theme_override_font_sizes/font_size = 50
 text = "PAUSED"
 horizontal_alignment = 1
@@ -65,6 +70,7 @@ horizontal_alignment = 1
 [node name="Resume" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=1102913139]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_kukqi")
 theme_override_font_sizes/font_size = 32
 text = "RESUME"
 flat = true
@@ -72,6 +78,7 @@ flat = true
 [node name="Quit" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=573209138]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_kukqi")
 theme_override_font_sizes/font_size = 32
 text = "QUIT"
 flat = true
@@ -79,6 +86,7 @@ flat = true
 [node name="Restart" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=910835507]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_kukqi")
 theme_override_font_sizes/font_size = 32
 text = "RESTART"
 flat = true

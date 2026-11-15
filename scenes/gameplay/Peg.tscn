@@ -13,7 +13,7 @@ region = Rect2(16.007046, -0.10516739, 16.08918, 16.089182)
 [sub_resource type="CircleShape2D" id="CircleShape2D_l3ops"]
 radius = 8.0
 
-[node name="Peg" type="StaticBody2D" unique_id=1192331612]
+[node name="Peg" type="StaticBody2D" groups=["scoreable"] unique_id=1192331612]
 physics_material_override = SubResource("PhysicsMaterial_ylhm0")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=509727277]

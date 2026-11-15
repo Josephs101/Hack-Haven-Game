@@ -1,11 +1,17 @@
 [gd_scene format=3 uid="uid://ccrsgcupr7fsv"]
 
 [ext_resource type="Script" uid="uid://dkogwy31c543" path="res://scripts/game_over.gd" id="1_wqhvx"]
-[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="2_tbwuq"]
+[ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="2_tbwuq"]
+[ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="3_racf3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7m3ot"]
+atlas = ExtResource("2_tbwuq")
+region = Rect2(95.74926, 223.73419, 32.08686, 32.518524)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v3hpu"]
 
 [node name="Control" type="Control" unique_id=172111338]
 process_mode = 3
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,6 +33,15 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.14509805, 0.14509805, 0.14509805, 0.654902)
 
+[node name="TextureRect" type="TextureRect" parent="." unique_id=889373046]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 0
+offset_left = 286.0
+offset_top = 386.0
+offset_right = 786.0
+offset_bottom = 686.0
+texture = SubResource("AtlasTexture_7m3ot")
+
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1526400355]
 layout_mode = 1
 anchors_preset = 8
@@ -41,14 +56,10 @@ offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=889373046]
-custom_minimum_size = Vector2(500, 300)
-layout_mode = 2
-texture = ExtResource("2_tbwuq")
-
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=292245312]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_v3hpu")
 
 [node name="BoxContainer" type="BoxContainer" parent="CenterContainer/PanelContainer" unique_id=1110103633]
 layout_mode = 2
@@ -57,18 +68,21 @@ vertical = true
 
 [node name="ScoreLabel2" type="Label" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=472502767]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_racf3")
 theme_override_font_sizes/font_size = 50
 text = "GAME OVER"
 horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=494174304]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_racf3")
 theme_override_font_sizes/font_size = 32
 text = "Score:0"
 horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=1478595572]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_racf3")
 theme_override_font_sizes/font_size = 32
 text = "Restart"
 flat = true
