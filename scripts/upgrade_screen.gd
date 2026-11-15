@@ -31,13 +31,28 @@ func open() -> void:
 
 
 func _pick_offers() -> Array:
-	var ids: Array = GameStats.UPGRADES.keys()
-	ids.shuffle()
-	return ids.slice(0, mini(OFFER_COUNT, ids.size()))
+	var picks: Array = []
+
+	# Offer one ability while the player has none.
+	if GameStats.current_ability == "":
+		var abilities: Array = GameStats.ABILITIES.keys()
+		abilities.shuffle()
+		if abilities.size() > 0:
+			picks.append(abilities[0])
+
+	var upgrades: Array = GameStats.UPGRADES.keys()
+	upgrades.shuffle()
+	for id in upgrades:
+		if picks.size() >= OFFER_COUNT:
+			break
+		picks.append(id)
+
+	picks.shuffle()
+	return picks
 
 
 func _make_card(id: String) -> Control:
-	var data: Dictionary = GameStats.UPGRADES[id]
+	var data: Dictionary = GameStats.get_offer(id)
 
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(170, 240)

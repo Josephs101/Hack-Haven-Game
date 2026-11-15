@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dk1025l1hjsa7" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
 [ext_resource type="AudioStream" uid="uid://dupifb45g8pyv" path="res://assets/sound/CYCLOPS.mp3" id="7_71yfb"]
 [ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="7_flipr"]
-[ext_resource type="PackedScene" uid="uid://dw76a2d1tnpk1" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
+[ext_resource type="PackedScene" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
 
 [node name="Level2" type="Node2D" unique_id=1978717256]
 script = ExtResource("1_eugj0")
@@ -105,7 +105,7 @@ position = Vector2(660, 750)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1848325154]
 stream = ExtResource("7_71yfb")
-volume_db = 24.0
+volume_db = 16.0
 autoplay = true
 
 [editable path="Flippers2"]
