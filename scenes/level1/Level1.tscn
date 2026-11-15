@@ -13,7 +13,6 @@ script = ExtResource("1_eugj0")
 level_number = 1
 
 [node name="LevelScreen" parent="." unique_id=366287594 instance=ExtResource("1_8d8in")]
-next_level_scene = "res://scenes/level2/Level2.tscn"
 
 [node name="Flippers" parent="." unique_id=1203122303 instance=ExtResource("2_e5fgp")]
 position = Vector2(306, 951)

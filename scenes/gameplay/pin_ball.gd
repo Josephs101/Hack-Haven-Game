@@ -11,3 +11,7 @@ func _ready() -> void:
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("scoreable"):
 		GameStats.register_hit()
+
+		# Pegs react to being hit; bumpers and flippers animate themselves.
+		if body.has_method(&"jiggle"):
+			body.jiggle()

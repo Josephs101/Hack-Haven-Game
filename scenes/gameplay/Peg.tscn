@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bew01jfprilr"]
 
 [ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="1_76axe"]
+[ext_resource type="Script" path="res://scripts/peg.gd" id="2_peg"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ylhm0"]
 friction = 0.1
@@ -15,6 +16,7 @@ radius = 8.0
 
 [node name="Peg" type="StaticBody2D" groups=["scoreable"] unique_id=1192331612]
 physics_material_override = SubResource("PhysicsMaterial_ylhm0")
+script = ExtResource("2_peg")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=509727277]
 scale = Vector2(1.75, 1.75)

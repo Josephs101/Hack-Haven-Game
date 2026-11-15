@@ -1,5 +1,34 @@
 extends Control
 
+# Score and combo text heat up as they climb. Each stop is [value, color] and
+# anything in between is blended, so these also control how fast the shift
+# reads. Scores reset every ball set, which is why the top stop is modest.
+const SCORE_COLOR_STOPS := [
+	[0.0, Color(1, 1, 1, 1)],
+	[250.0, Color(1, 0.878, 0.4, 1)],
+	[700.0, Color(1, 0.69, 0.13, 1)],
+	[1400.0, Color(1, 0.42, 0.21, 1)],
+	[2400.0, Color(1, 0.23, 0.42, 1)],
+]
+
+const COMBO_COLOR_STOPS := [
+	[0.0, Color(1, 1, 1, 1)],
+	[3.0, Color(0.56, 0.94, 1, 1)],
+	[6.0, Color(1, 0.878, 0.4, 1)],
+	[10.0, Color(1, 0.62, 0.26, 1)],
+	[15.0, Color(1, 0.37, 0.37, 1)],
+	[20.0, Color(1, 0.36, 0.94, 1)],
+]
+
+# Balls and rounds fade from green (plenty left) through amber to red (running
+# out). Keyed on the remaining fraction, so it works for 3 balls or 4 rounds
+# alike and shifts a little with every single loss.
+const REMAINING_COLOR_STOPS := [
+	[0.0, Color(0.92, 0.2, 0.2, 1)],
+	[0.45, Color(1, 0.78, 0.25, 1)],
+	[1.0, Color(0.35, 0.9, 0.4, 1)],
+]
+
 @onready var score_value: Label = %ScoreValue
 @onready var boss_bar: ProgressBar = %BossBar
 @onready var balls_value: Label = %BallsValue
@@ -12,8 +41,31 @@ extends Control
 @onready var boss_name_label: Label = %BossName
 @onready var modifiers_list: VBoxContainer = %ModifiersList
 
-var _boss_tween: Tween = null
 const HUD_FONT := preload("res://assets/font(s)/Minecraft.ttf")
+
+var _boss_tween: Tween = null
+var _default_boss_frames: SpriteFrames = null
+
+@export_group("Combo Shake")
+## Degrees of tilt added per combo step.
+@export var combo_wobble_per_step := 1.0
+## Ceiling on the tilt, in degrees.
+@export var combo_wobble_max := 6.0
+## Pixels of vertical shake added per combo step.
+@export var combo_shake_per_step := 1.6
+## Ceiling on the vertical shake, in pixels.
+@export var combo_shake_max := 18.0
+## Shake rate, in radians per second.
+@export var combo_wobble_speed := 34.0
+
+var _combo_wobble := 0.0
+var _combo_wobble_target := 0.0
+var _combo_shake := 0.0
+var _combo_shake_target := 0.0
+var _combo_phase := 0.0
+var _combo_base_y := 0.0
+var _combo_base_ready := false
+var _color_tweens := {}
 
 var rng = RandomNumberGenerator.new()
 
@@ -22,6 +74,7 @@ func _ready() -> void:
 	GameStats.combo_changed.connect(_on_combo_changed)
 	GameStats.boss_health_changed.connect(_on_boss_health_changed)
 	GameStats.boss_name_changed.connect(_on_boss_name_changed)
+	GameStats.boss_visual_changed.connect(_on_boss_visual_changed)
 	GameStats.balls_changed.connect(_on_balls_changed)
 	GameStats.rounds_changed.connect(_on_rounds_changed)
 	GameStats.upgrades_changed.connect(_on_upgrades_changed)
@@ -30,6 +83,7 @@ func _ready() -> void:
 	boss_bar.value = GameStats.boss_hp
 	boss_value.text = "%d / %d" % [GameStats.boss_hp, GameStats.boss_max_hp]
 
+	_style_value_labels()
 	_on_score_changed(GameStats.score)
 	_on_combo_changed(GameStats.combo, GameStats.multiplier)
 	_on_boss_name_changed(GameStats.boss_name)
@@ -37,22 +91,140 @@ func _ready() -> void:
 	_on_rounds_changed(GameStats.rounds_left)
 	_on_upgrades_changed()
 
+	combo_value.resized.connect(_recenter_combo_pivot)
+	call_deferred("_cache_combo_origin")
+
 	rng.randomize()
+	_default_boss_frames = boss_sprite.sprite_frames
+	_apply_boss_frames(GameStats.boss_frames_path)
 	boss_sprite.animation_finished.connect(_on_boss_animation_finished)
 	boss_sprite.play("idle")
 	_schedule_boss_jump()
 
 
+func _process(delta: float) -> void:
+	# Both motions grow with the combo and settle back to nothing when it
+	# breaks. The vertical shake runs faster than the tilt and travels further,
+	# so the label reads as shaking up and down rather than swinging.
+	var ease_weight := 1.0 - exp(-10.0 * delta)
+	_combo_wobble = lerpf(_combo_wobble, _combo_wobble_target, ease_weight)
+	_combo_shake = lerpf(_combo_shake, _combo_shake_target, ease_weight)
+	_combo_phase += delta * combo_wobble_speed
+
+	combo_value.rotation = deg_to_rad(sin(_combo_phase) * _combo_wobble)
+
+	if _combo_base_ready:
+		combo_value.position.y = _combo_base_y + sin(_combo_phase * 1.7) * _combo_shake
+
+
+# The label lives in a VBoxContainer, so its position belongs to the layout.
+# Remember where the container put it, then shake around that point.
+func _cache_combo_origin() -> void:
+	_combo_base_y = combo_value.position.y
+	_combo_base_ready = true
+	_recenter_combo_pivot()
+
+
+# Rotate about the middle of the text rather than the middle of the label box:
+# the label is left aligned inside a wider column, so the box centre sits well
+# to the right of the glyphs.
+func _recenter_combo_pivot() -> void:
+	var font := combo_value.get_theme_font("font")
+	var font_size := combo_value.get_theme_font_size("font_size")
+	var text_size := font.get_string_size(
+		combo_value.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size
+	)
+	combo_value.pivot_offset = Vector2(text_size.x * 0.5, combo_value.size.y * 0.5)
+
+
 func _on_combo_changed(value: int, mult: float) -> void:
 	combo_value.text = "COMBO %d  x%.1f" % [value, mult]
+	combo_value.add_theme_color_override(
+		"font_color", _heat_color(float(value), COMBO_COLOR_STOPS)
+	)
+
+	_combo_wobble_target = clampf(
+		float(value - 1) * combo_wobble_per_step, 0.0, combo_wobble_max
+	)
+	_combo_shake_target = clampf(
+		float(value - 1) * combo_shake_per_step, 0.0, combo_shake_max
+	)
+	_recenter_combo_pivot()
+
+
+# Gives both readouts a dark outline so the hotter colours stay readable on the
+# wooden score banner.
+func _style_value_labels() -> void:
+	var outline := Color(0.08, 0.05, 0.02, 1.0)
+
+	score_value.add_theme_color_override("font_outline_color", outline)
+	score_value.add_theme_constant_override("outline_size", 6)
+
+	combo_value.add_theme_color_override("font_outline_color", outline)
+	combo_value.add_theme_constant_override("outline_size", 4)
+
+
+func _heat_color(value: float, stops: Array) -> Color:
+	if value <= float(stops[0][0]):
+		return stops[0][1]
+
+	for i in range(1, stops.size()):
+		var high_value := float(stops[i][0])
+		if value > high_value:
+			continue
+
+		var low_value := float(stops[i - 1][0])
+		var low_color: Color = stops[i - 1][1]
+		var high_color: Color = stops[i][1]
+
+		var t := 0.0
+		if not is_equal_approx(high_value, low_value):
+			t = clampf((value - low_value) / (high_value - low_value), 0.0, 1.0)
+
+		return low_color.lerp(high_color, t)
+
+	return stops[stops.size() - 1][1]
 
 
 func _on_boss_name_changed(value: String) -> void:
 	boss_name_label.text = value
 
 
+func _on_boss_visual_changed(frames_path: String) -> void:
+	_apply_boss_frames(frames_path)
+
+
+# Swaps the boss animation for the current level. A level with no
+# "boss_frames" entry falls back to the frames authored in InGameUI.tscn, so
+# this stays out of the way of edits made to that scene.
+func _apply_boss_frames(frames_path: String) -> void:
+	var frames: SpriteFrames = _default_boss_frames
+
+	if not frames_path.is_empty():
+		if ResourceLoader.exists(frames_path):
+			var override := load(frames_path) as SpriteFrames
+			if override != null:
+				frames = override
+			else:
+				push_warning("Boss frames are not a SpriteFrames: %s" % frames_path)
+		else:
+			push_warning("Boss frames not found: %s" % frames_path)
+
+	if frames == null:
+		return
+
+	if boss_sprite.sprite_frames != frames:
+		boss_sprite.sprite_frames = frames
+
+	if frames.has_animation(&"idle"):
+		boss_sprite.play(&"idle")
+
+
 func _on_score_changed(value: int) -> void:
 	score_value.text = str(value)
+	score_value.add_theme_color_override(
+		"font_color", _heat_color(float(value), SCORE_COLOR_STOPS)
+	)
 
 
 func _on_boss_health_changed(hp: int, max_hp: int) -> void:
@@ -73,10 +245,34 @@ func _on_boss_health_changed(hp: int, max_hp: int) -> void:
 
 func _on_balls_changed(left: int) -> void:
 	balls_value.text = str(left)
+	_tint_remaining(balls_value, left, GameStats.balls_per_set)
 
 
 func _on_rounds_changed(left: int) -> void:
 	rounds_value.text = str(left)
+	_tint_remaining(rounds_value, left, GameStats.rounds_per_boss)
+
+
+# Slides a counter from green to red as it runs out, easing between values so
+# spending a ball reads as a fade rather than a snap.
+func _tint_remaining(label: Label, left: int, maximum: int) -> void:
+	var fraction := 0.0
+	if maximum > 0:
+		fraction = clampf(float(left) / float(maximum), 0.0, 1.0)
+
+	var running: Tween = _color_tweens.get(label)
+	if running != null and running.is_valid():
+		running.kill()
+
+	var tween := create_tween()
+	tween.tween_method(
+		func(c: Color) -> void: label.add_theme_color_override("font_color", c),
+		label.get_theme_color("font_color"),
+		_heat_color(fraction, REMAINING_COLOR_STOPS),
+		0.3
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+	_color_tweens[label] = tween
 
 
 func _schedule_boss_jump() -> void:
@@ -96,6 +292,7 @@ func _on_boss_animation_finished() -> void:
 		_schedule_boss_jump()
 
 
+# Rebuilds the little list of upgrades picked so far.
 func _on_upgrades_changed() -> void:
 	for child in modifiers_list.get_children():
 		child.queue_free()
