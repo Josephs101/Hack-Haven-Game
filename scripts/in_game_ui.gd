@@ -62,15 +62,15 @@ var _jump_timer: Timer = null
 
 @export_group("Combo Shake")
 ## Degrees of tilt added per combo step.
-@export var combo_wobble_per_step := 1.0
+@export var combo_wobble_per_step := 0.1
 ## Ceiling on the tilt, in degrees.
-@export var combo_wobble_max := 6.0
+@export var combo_wobble_max := 10
 ## Pixels of vertical shake added per combo step.
 @export var combo_shake_per_step := 1.6
 ## Ceiling on the vertical shake, in pixels.
-@export var combo_shake_max := 18.0
+@export var combo_shake_max := 5.0
 ## Shake rate, in radians per second.
-@export var combo_wobble_speed := 34.0
+@export var combo_wobble_speed := 20.0
 
 var _combo_wobble := 0.0
 var _combo_wobble_target := 0.0
@@ -167,10 +167,10 @@ func _on_combo_changed(value: int, mult: float) -> void:
 	)
 
 	_combo_wobble_target = clampf(
-		float(value - 1) * combo_wobble_per_step, 0.0, combo_wobble_max
+		float(value-1) * combo_wobble_per_step, 0.0, combo_wobble_max
 	)
 	_combo_shake_target = clampf(
-		float(value - 1) * combo_shake_per_step, 0.0, combo_shake_max
+		float(value-1) * combo_shake_per_step, 0.0, combo_shake_max
 	)
 	_recenter_combo_pivot()
 
@@ -278,6 +278,7 @@ func _on_boss_health_changed(hp: int, max_hp: int) -> void:
 
 	if damage > 0:
 		_play_damage_animation(damage, max_hp, hp)
+		
 
 
 func _on_balls_changed(left: int) -> void:
@@ -339,8 +340,10 @@ func _play_damage_animation(damage: int, max_hp: int, hp: int) -> void:
 		return
 
 	var anim_name := BOSS_SMALL_DAMAGE
+	var damage_sound: AudioStreamPlayer2D = $TextureRect/notkill
 	if hp <= 0:
 		anim_name = BOSS_KILL
+		damage_sound = $TextureRect/kill
 	elif max_hp > 0 and float(damage) / float(max_hp) >= big_damage_fraction:
 		anim_name = BOSS_BIG_DAMAGE
 
@@ -353,6 +356,8 @@ func _play_damage_animation(damage: int, max_hp: int, hp: int) -> void:
 
 	damage_overlay.visible = true
 	damage_overlay.play(anim_name)
+	damage_sound.play()
+
 
 
 func _on_damage_overlay_finished() -> void:

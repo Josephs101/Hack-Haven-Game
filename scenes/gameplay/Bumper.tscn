@@ -17,7 +17,7 @@ disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1821647873]
 
-[node name="BumperArea" type="Area2D" parent="." unique_id=1100718477]
+[node name="BumperArea" type="Area2D" parent="." groups=["scoreable"] unique_id=1100718477]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BumperArea" unique_id=924819194]
 shape = SubResource("CircleShape2D_61no2")

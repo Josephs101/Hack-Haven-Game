@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bvbmmolcm4cji" path="res://scenes/launcher.gd" id="1_cm6pl"]
 [ext_resource type="Texture2D" uid="uid://lmjpveg4gjum" path="res://assets/sprites/SpringAnimation.png" id="1_m736f"]
 [ext_resource type="Script" uid="uid://8oynuhudenpj" path="res://power_meter.gd" id="1_ut831"]
+[ext_resource type="AudioStream" uid="uid://c7ackw4r202nq" path="res://assets/sound/SPRING.mp3" id="4_wr5gk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cm6pl"]
 atlas = ExtResource("1_m736f")
@@ -203,3 +204,6 @@ offset_bottom = 135.0
 scale = Vector2(0.7174157, 0.43553472)
 script = ExtResource("1_ut831")
 
+[node name="SFX_Spring" type="AudioStreamPlayer2D" parent="." unique_id=1319029828]
+stream = ExtResource("4_wr5gk")
+volume_db = 18.4

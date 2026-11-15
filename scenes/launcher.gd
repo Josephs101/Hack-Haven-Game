@@ -3,18 +3,21 @@ extends Node2D
 @export var ball_scene: PackedScene = preload("res://scenes/gameplay/PinBall.tscn")
 @export var min_speed := 1700.0
 @export var max_speed := 3200.0
-@export var charge_speed := 1.2
+@export var charge_rate := 0.7
 @export var launch_action := "launch"
+@export var charge_up_action := "charge_up"
+@export var charge_down_action := "charge_down"
+
+const TRAJECTORY_SCRIPT := preload("res://scripts/trajectory.gd")
 
 @onready var meter: PowerMeter = $PowerMeter
 @onready var spawn: Marker2D = $BallSpawn
 @onready var anim: AnimatedSprite2D = $Spring
+@onready var SFX_Spring: AudioStreamPlayer2D = $SFX_Spring
 
 var _waiting_ball: RigidBody2D = null
 var _waiting_layer := 1
 var _waiting_mask := 1
-var _charging := false
-var _charge_time := 0.0
 var _power := 0.0
 var _can_launch := true
 var _pending_ball: RigidBody2D = null
@@ -22,6 +25,10 @@ var _pending_extras: Array[RigidBody2D] = []
 var _pending_power := 0.0
 var _spring_tops: Array[float] = []
 var _release_frame := 14
+var _trajectory: Node2D = null
+var _last_traj_power := -1.0
+var _last_traj_ready := false
+var _one_way_rids: Array[RID] = []
 
 # Vertical gap between the primary and extra multiball so they do not spawn
 # inside each other (overlapping bodies get ejected unpredictably).
@@ -31,7 +38,33 @@ func _ready() -> void:
 	anim.frame_changed.connect(_on_spring_frame_changed)
 	GameStats.balls_changed.connect(_on_balls_changed)
 	_build_spring_profile()
+	_collect_one_way_rids(get_parent())
+
+	_trajectory = TRAJECTORY_SCRIPT.new()
+	_trajectory.z_index = 5
+	add_child(_trajectory)
+
 	_spawn_waiting_ball()
+
+
+# The launch lane has a one-way gate the ball passes through, but a raycast
+# still reports it as a ceiling. Ignore those bodies in the preview.
+func _collect_one_way_rids(root: Node) -> void:
+	_one_way_rids.clear()
+
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+
+		if node is CollisionShape2D and (node as CollisionShape2D).one_way_collision:
+			var body := node.get_parent()
+			if body is CollisionObject2D:
+				var rid := (body as CollisionObject2D).get_rid()
+				if not _one_way_rids.has(rid):
+					_one_way_rids.append(rid)
+
+		for child in node.get_children():
+			stack.append(child)
 
 
 # The ball rides on top of the spring, so the launcher needs to know where that
@@ -107,34 +140,173 @@ func _on_balls_changed(left: int) -> void:
 
 
 func _process(delta: float) -> void:
+	_update_trajectory()
+
 	if not _can_launch or _waiting_ball == null or GameStats.balls_left <= 0:
 		return
 
-	if Input.is_action_just_pressed(launch_action):
-		if _charging:
-			_confirm_launch()
-		else:
-			_start_charge()
-
-	if _charging:
-		_charge_time += delta
-		var cycle := fmod(_charge_time * charge_speed, 2.0)
-		_power = cycle if cycle <= 1.0 else 2.0 - cycle
+	if Input.is_action_pressed(charge_up_action):
+		_power = clampf(_power + charge_rate * delta, 0.0, 1.0)
+		meter.set_power(_power)
+	elif Input.is_action_pressed(charge_down_action):
+		_power = clampf(_power - charge_rate * delta, 0.0, 1.0)
 		meter.set_power(_power)
 
+	if Input.is_action_just_pressed(launch_action):
+		_confirm_launch()
 
-func _start_charge() -> void:
-	_charging = true
-	_charge_time = 0.0
-	_power = 0.0
-	meter.set_power(0.0)
+
+# Dotted preview of where the ball will fly. Circle-casts the real table so the
+# line follows the ball's radius and bounces, then stops at a pin or bumper.
+func _update_trajectory() -> void:
+	if _trajectory == null:
+		return
+
+	var ready := _waiting_ball != null and _can_launch and GameStats.balls_left > 0
+	if not ready:
+		if _last_traj_ready:
+			_trajectory.set_path(PackedVector2Array())
+			_last_traj_ready = false
+			_last_traj_power = -1.0
+		return
+
+	if _last_traj_ready and absf(_power - _last_traj_power) < 0.02:
+		return
+
+	_last_traj_ready = true
+	_last_traj_power = _power
+
+	var speed := lerpf(min_speed, max_speed, _power) * GameStats.speed_multiplier
+	var gravity := Vector2.DOWN * (980.0 * 0.3 * GameStats.gravity_multiplier)
+	var restitution := 0.8
+	var damping := 0.1
+	var radius := 16.0
+	var step := 0.008
+	var spacing := 14.0
+	var max_dots := 120
+
+	var circle := CircleShape2D.new()
+	circle.radius = radius
+
+	var exclude: Array[RID] = []
+	exclude.append_array(_one_way_rids)
+	if _waiting_ball != null:
+		exclude.append(_waiting_ball.get_rid())
+
+	var params := PhysicsShapeQueryParameters2D.new()
+	params.shape = circle
+	params.collision_mask = 1
+	params.exclude = exclude
+
+	var space := get_world_2d().direct_space_state
+	var pos := spawn.global_position
+	var vel := Vector2.UP * speed
+	var points := PackedVector2Array()
+	var run_up := PackedVector2Array()
+	var bounced := false
+	var travelled := 0.0
+	var next_mark := spacing
+
+	for i in range(700):
+		# Bumpers are Area2D sensors, not bodies, so check them separately.
+		params.transform = Transform2D(0.0, pos)
+		params.motion = Vector2.ZERO
+		params.collide_with_areas = true
+		params.collide_with_bodies = false
+		var area_hits := space.intersect_shape(params, 4)
+		params.collide_with_areas = false
+		params.collide_with_bodies = true
+
+		var hit_bumper := false
+		for area_hit in area_hits:
+			var area_collider = area_hit.collider
+			if area_collider is Node and (area_collider as Node).is_in_group("scoreable"):
+				hit_bumper = true
+				break
+
+		if hit_bumper:
+			if not bounced:
+				points.append_array(run_up)
+				run_up.clear()
+			points.append(pos - global_position)
+			break
+
+		var motion := vel * step
+		params.transform = Transform2D(0.0, pos)
+		params.motion = motion
+
+		var cast := space.cast_motion(params)
+		var safe: float = cast[0]
+
+		if safe < 0.999:
+			var contact := pos + motion * safe
+			var direction := motion.normalized()
+			# get_rest_info only reports a normal when the shape overlaps a
+			# little, so probe just past the contact point.
+			params.transform = Transform2D(0.0, contact + direction * 2.0)
+			params.motion = Vector2.ZERO
+			var rest := space.get_rest_info(params)
+
+			if not rest.has("normal"):
+				points.append(contact - global_position)
+				break
+
+			var collider = rest.get("collider", null)
+			var is_object := collider is Node and (collider as Node).is_in_group("scoreable")
+
+			if is_object:
+				if not bounced:
+					points.append_array(run_up)
+					run_up.clear()
+				points.append(contact - global_position)
+				break
+
+			var normal: Vector2 = rest.normal
+			pos = contact + normal * 0.5
+
+			if not bounced:
+				bounced = true
+				points.append_array(run_up)
+				run_up.clear()
+				travelled = 0.0
+				next_mark = spacing
+
+			points.append(pos - global_position)
+
+			var normal_speed := vel.dot(normal)
+			vel -= (1.0 + restitution) * normal_speed * normal
+			vel += gravity * step
+			vel *= 1.0 - damping * step
+
+			if points.size() >= max_dots:
+				break
+			continue
+
+		pos += motion
+		vel += gravity * step
+		vel *= 1.0 - damping * step
+
+		if bounced:
+			travelled += motion.length()
+			if travelled >= next_mark:
+				points.append(pos - global_position)
+				next_mark += spacing
+				if points.size() >= max_dots:
+					break
+		else:
+			run_up.append(pos - global_position)
+			if run_up.size() > 5:
+				run_up.remove_at(0)
+
+		if pos.y > 1150.0 or pos.x < -50.0 or pos.x > 1120.0:
+			break
+
+	_trajectory.set_path(points)
 
 
 func _confirm_launch() -> void:
 	if _waiting_ball == null:
 		return
-
-	_charging = false
 
 	if not GameStats.use_ball():
 		return
@@ -151,6 +323,7 @@ func _confirm_launch() -> void:
 		GameStats.active_balls += 1
 
 	anim.play("launch")
+	SFX_Spring.play()
 
 	await anim.animation_finished
 
@@ -182,6 +355,8 @@ func _spawn_waiting_ball() -> void:
 	await ball.tree_entered
 
 	ball.global_position = spawn.global_position
+	_power = 0.0
+	meter.set_power(0.0)
 
 
 
