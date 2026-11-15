@@ -139,7 +139,7 @@ region = Rect2(95.566055, 223.76704, 33.177307, 32.58275)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nb3d3"]
 
-[node name="Control" type="Control" unique_id=172111338]
+[node name="Control2" type="Control" unique_id=172111338]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -165,10 +165,10 @@ color = Color(0.14509805, 0.14509805, 0.14509805, 0.654902)
 [node name="Confetti" type="AnimatedSprite2D" parent="." unique_id=1145780147]
 unique_name_in_owner = true
 visible = false
-speed_scale = 0.5
 position = Vector2(536, 536)
 sprite_frames = SubResource("SpriteFrames_6wto8")
 animation = &"big_confetti"
+speed_scale = 0.5
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1526400355]
 layout_mode = 1
@@ -230,4 +230,3 @@ flat = true
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1807711842]
 stream = ExtResource("5_nb3d3")
 volume_db = 20.0
-autoplay = true

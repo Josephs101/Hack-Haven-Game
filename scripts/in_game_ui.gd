@@ -29,6 +29,16 @@ const REMAINING_COLOR_STOPS := [
 	[1.0, Color(0.35, 0.9, 0.4, 1)],
 ]
 
+# Peg-hit "pinball" ding. Its pitch climbs with the combo.
+const PINBALL_SOUND := preload("res://assets/sound/PINBALL.wav")
+const PINBALL_VOICES := 4
+
+# Bumper hit. Played quietly and cut short so it reads as a tick, not the full clip.
+const BOUNCER_SOUND := preload("res://assets/sound/BOUNCER_HIT.wav")
+const BOUNCER_VOICES := 4
+const BOUNCER_VOLUME_DB :=3.0
+const BOUNCER_SECONDS := 0.14
+
 @onready var score_value: Label = %ScoreValue
 @onready var boss_bar: ProgressBar = %BossBar
 @onready var balls_value: Label = %BallsValue
@@ -41,6 +51,15 @@ const REMAINING_COLOR_STOPS := [
 @onready var combo_value: Label = %ComboValue
 @onready var boss_name_label: Label = %BossName
 @onready var modifiers_list: VBoxContainer = %ModifiersList
+@onready var ability_value: Label = $AbilityContainer/AbilityBlock/RoundsValue
+@onready var ability_block: VBoxContainer = $AbilityContainer/AbilityBlock
+@onready var ability_container: PanelContainer = $AbilityContainer
+@onready var ability_background: TextureRect = $AbilityContainer/AbilityBlock/RoundsValue/TextureRect2
+var ability_icon: TextureRect = null
+var _pinball_players: Array[AudioStreamPlayer] = []
+var _pinball_voice := 0
+var _bouncer_players: Array[AudioStreamPlayer] = []
+var _bouncer_voice := 0
 @onready var best_reached: Label = %BestReached
 
 const HUD_FONT := preload("res://assets/font(s)/Minecraft.ttf")
@@ -63,6 +82,7 @@ const BOSS_KILL := &"kill"
 var _last_boss_hp := -1
 var _boss_busy := false
 var _jump_timer: Timer = null
+var _ability_short := "NONE"
 
 @export_group("Combo Shake")
 ## Degrees of tilt added per combo step.
@@ -96,19 +116,27 @@ func _ready() -> void:
 	GameStats.balls_changed.connect(_on_balls_changed)
 	GameStats.rounds_changed.connect(_on_rounds_changed)
 	GameStats.upgrades_changed.connect(_on_upgrades_changed)
+	GameStats.ability_changed.connect(_on_ability_changed)
+	GameStats.peg_hit.connect(_on_peg_hit)
+	GameStats.bouncer_hit.connect(_on_bouncer_hit)
 	GameStats.best_bosses_changed.connect(_on_best_bosses_changed)
+
+	_setup_pinball_sound()
+	_setup_bouncer_sound()
 
 	boss_bar.max_value = GameStats.boss_max_hp
 	boss_bar.value = GameStats.boss_hp
 	boss_value.text = "%d / %d" % [GameStats.boss_hp, GameStats.boss_max_hp]
 
 	_style_value_labels()
+	_build_ability_icon()
 	_on_score_changed(GameStats.score)
 	_on_combo_changed(GameStats.combo, GameStats.multiplier)
 	_on_boss_name_changed(GameStats.boss_name)
 	_on_balls_changed(GameStats.balls_left)
 	_on_rounds_changed(GameStats.rounds_left)
 	_on_upgrades_changed()
+	_on_ability_changed(GameStats.current_ability)
 	_refresh_best_reached()
 
 	combo_value.resized.connect(_recenter_combo_pivot)
@@ -145,6 +173,8 @@ func _process(delta: float) -> void:
 
 	if _combo_base_ready:
 		combo_value.position.y = _combo_base_y + sin(_combo_phase * 1.7) * _combo_shake
+
+	_update_ability_label()
 
 
 # The label lives in a VBoxContainer, so its position belongs to the layout.
@@ -436,6 +466,100 @@ func _on_best_bosses_changed(_best: int) -> void:
 	_refresh_best_reached()
 
 
+func _setup_pinball_sound() -> void:
+	for i in range(PINBALL_VOICES):
+		var player := AudioStreamPlayer.new()
+		player.stream = PINBALL_SOUND
+		player.volume_db = 18.0
+		player.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(player)
+		_pinball_players.append(player)
+
+
+# Fired by peg.gd every time a ball touches a peg. Pitch rises with the combo.
+func _on_peg_hit(combo: int) -> void:
+	if _pinball_players.is_empty():
+		return
+
+	var player := _pinball_players[_pinball_voice]
+	_pinball_voice = (_pinball_voice + 1) % _pinball_players.size()
+	player.pitch_scale = clampf(1.0 + float(combo) * 0.15, 1.0, 3.0)
+	player.play()
+
+
+func _setup_bouncer_sound() -> void:
+	for i in range(BOUNCER_VOICES):
+		var player := AudioStreamPlayer.new()
+		player.stream = BOUNCER_SOUND
+		player.volume_db = BOUNCER_VOLUME_DB
+		player.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(player)
+		_bouncer_players.append(player)
+
+
+# Fired by bumper.gd when a ball hits a bumper.
+func _on_bouncer_hit() -> void:
+	if _bouncer_players.is_empty():
+		return
+
+	var player := _bouncer_players[_bouncer_voice]
+	_bouncer_voice = (_bouncer_voice + 1) % _bouncer_players.size()
+	player.play()
+	_stop_sound_after(player, BOUNCER_SECONDS)
+
+
+# Cut the tail off the clip so the hit stays short.
+func _stop_sound_after(player: AudioStreamPlayer, seconds: float) -> void:
+	await get_tree().create_timer(seconds, true).timeout
+	if is_instance_valid(player) and player.playing:
+		player.stop()
+
+
+func _build_ability_icon() -> void:
+	ability_icon = TextureRect.new()
+	ability_icon.name = "AbilityIcon"
+	ability_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ability_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ability_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	ability_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	ability_icon.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ability_icon.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	ability_icon.visible = false
+	ability_container.add_child(ability_icon)
+	ability_container.move_child(ability_icon, 0)
+
+
+# Shows the equipped ability in the HUD box.
+func _on_ability_changed(_id: String) -> void:
+	if ability_icon == null:
+		_build_ability_icon()
+
+	_ability_short = "NONE"
+	var icon_path := ""
+
+	if GameStats.ABILITIES.has(GameStats.current_ability):
+		var data: Dictionary = GameStats.ABILITIES[GameStats.current_ability]
+		_ability_short = str(data.get("short", "NONE"))
+		icon_path = str(data.get("icon", ""))
+
+	var show_icon := icon_path != "" and ResourceLoader.exists(icon_path)
+	if show_icon:
+		ability_icon.texture = load(icon_path) as Texture2D
+
+	ability_icon.visible = show_icon
+	ability_background.visible = not show_icon
+
+	ability_value.add_theme_font_size_override("font_size", 16)
+	_update_ability_label()
+
+
+func _update_ability_label() -> void:
+	if GameStats.ability_cooldown > 0.0:
+		ability_value.text = "%s %ds" % [_ability_short, ceili(GameStats.ability_cooldown)]
+	else:
+		ability_value.text = _ability_short
+
+
 # Rebuilds the little list of upgrades picked so far.
 func _on_upgrades_changed() -> void:
 	for child in modifiers_list.get_children():
@@ -443,10 +567,10 @@ func _on_upgrades_changed() -> void:
 
 	for upgrade in GameStats.get_upgrades():
 		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 6)
+		row.add_theme_constant_override("separation", 3)
 
 		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(20, 20)
+		icon.custom_minimum_size = Vector2(10, 10)
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.texture = _load_upgrade_icon(upgrade)
 		row.add_child(icon)
@@ -454,7 +578,7 @@ func _on_upgrades_changed() -> void:
 		var label := Label.new()
 		label.add_theme_font_override("font", HUD_FONT)
 		label.text = str(upgrade.get("name", ""))
-		label.add_theme_font_size_override("font_size", 12)
+		label.add_theme_font_size_override("font_size", 14)
 		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(label)
 
