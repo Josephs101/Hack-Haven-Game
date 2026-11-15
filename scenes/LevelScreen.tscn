@@ -28,3 +28,4 @@ visible = false
 position = Vector2(0, -13)
 
 [node name="launcher" parent="." unique_id=156511213 instance=ExtResource("6_016qk")]
+position = Vector2(175, 1088)

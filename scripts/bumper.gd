@@ -26,7 +26,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if outward_speed < min_outward_speed:
 		var additional_speed = min_outward_speed - outward_speed
 		body.linear_velocity = current_velocity + direction * additional_speed
-
+	
+	# Play Animation
 	body.sleeping = false
 
 	# Notify the visual bumper
