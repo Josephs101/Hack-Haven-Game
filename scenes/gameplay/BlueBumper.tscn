@@ -84,6 +84,7 @@ animations = [{
 script = ExtResource("1_lfvn2")
 
 [node name="Bumper" parent="." unique_id=1407537393 instance=ExtResource("2_3fskq")]
+min_outward_speed = 1000.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1985112362]
 position = Vector2(2, 4)

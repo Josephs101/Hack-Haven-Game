@@ -11,7 +11,7 @@ script = ExtResource("2_endless")
 [node name="LevelScreen" parent="." unique_id=338866007 instance=ExtResource("1_8d8in")]
 
 [node name="Flippers" parent="." unique_id=1527051361 instance=ExtResource("3_flip")]
-position = Vector2(306, 951)
+position = Vector2(338, 989)
 
 [node name="Flippers2" parent="." unique_id=1953108219 instance=ExtResource("3_flip")]
 position = Vector2(635, 949)
@@ -19,16 +19,17 @@ input_action = "RightFlipper"
 rotation_direction = -1.0
 
 [node name="AnimatedSprite2D" parent="Flippers2" index="0" unique_id=668592814]
-position = Vector2(-36, -39)
+position = Vector2(-46, 1)
 flip_h = true
 
 [node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1953108219, 2074405972) index="0" unique_id=1209279245]
+position = Vector2(-3, 39)
 rotation = 3.1415927
 
 [node name="Flippers3" parent="." unique_id=662988095 instance=ExtResource("3_flip")]
-position = Vector2(340, 830)
+position = Vector2(260, 355)
 
 [node name="Flippers4" parent="." unique_id=138820497 instance=ExtResource("4_flipr")]
-position = Vector2(620, 830)
+position = Vector2(701, 356)
 
 [editable path="Flippers2"]
