@@ -6,11 +6,11 @@ extends Camera2D
 ## not need a camera node. Tuning lives in level_screen.gd's "Screen Effects"
 ## group, which overrides the defaults below.
 
-var shake_threshold := 6
-var max_offset := 7.0
-var trauma_decay := 2.0
-var zoom_per_combo := 0.006
-var max_extra_zoom := 0.08
+var shake_threshold := 8
+var max_offset := 4.5
+var trauma_decay := 2.4
+var zoom_per_combo := 0.0045
+var max_extra_zoom := 0.05
 var zoom_speed := 6.0
 
 var _trauma := 0.0

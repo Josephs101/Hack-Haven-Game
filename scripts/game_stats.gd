@@ -11,6 +11,10 @@ signal boss_defeated
 signal boss_visual_changed(frames_path: String)
 signal upgrades_changed
 
+# Fired whenever the ball touches a peg, with the combo after that hit. Used
+# for the impact-frame effect; bumpers and flippers deliberately don't emit it.
+signal peg_hit(combo: int)
+
 const BASE_HIT_POINTS := 10
 const MULTIPLIER_PER_COMBO := 0.1
 const POINTS_PER_DAMAGE := 10

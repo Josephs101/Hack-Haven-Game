@@ -40,6 +40,7 @@ func hit() -> void:
 		return
 
 	_colour += 1
+	GameStats.peg_hit.emit(GameStats.combo)
 
 	if _colour >= colour_count:
 		_break()
