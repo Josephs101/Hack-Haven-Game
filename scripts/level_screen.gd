@@ -37,6 +37,9 @@ const IMPACT_FX := preload("res://scripts/impact_fx.gd")
 # Floating "+N" score popups, also on the UI layer.
 const SCORE_POPUPS := preload("res://scripts/score_popups.gd")
 
+# Big centre-screen damage readout shown when a ball drains.
+const DAMAGE_REPORT := preload("res://scripts/damage_report.gd")
+
 # DEVELOPER TOOL — remove this const and the _add_dev_tools() call below to
 # strip the instant-kill button. It also stays out of exported release builds.
 const DEV_TOOLS := preload("res://scripts/dev_tools.gd")
@@ -51,6 +54,7 @@ func _ready() -> void:
 	_add_screen_fx()
 	_add_impact_fx()
 	_add_score_popups()
+	_add_damage_report()
 	_add_dev_tools()
 
 	GameStats.ball_set_finished.connect(_on_ball_set_finished)
@@ -71,6 +75,12 @@ func _add_impact_fx() -> void:
 # Added last of the effects so the floats draw above the impact flash.
 func _add_score_popups() -> void:
 	$UI.add_child(SCORE_POPUPS.new())
+
+
+# Big damage number when a ball drains. Short enough to clear before the
+# round-clear panel opens.
+func _add_damage_report() -> void:
+	$UI.add_child(DAMAGE_REPORT.new())
 
 
 # Added in code so the shared LevelScreen scene stays free of a camera node and
