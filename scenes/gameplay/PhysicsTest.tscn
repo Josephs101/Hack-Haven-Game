@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://51ki3wsnk5p0"]
+
+[ext_resource type="PackedScene" uid="uid://dt6s8sldfxurv" path="res://scenes/gamePlay/Camera.tscn" id="1_6fcg1"]
+[ext_resource type="PackedScene" uid="uid://dkdabpuplfkah" path="res://scenes/gamePlay/Ground.tscn" id="2_t84yh"]
+[ext_resource type="PackedScene" uid="uid://3unhg68ipx4b" path="res://scenes/gamePlay/PinBall.tscn" id="3_8dcby"]
+[ext_resource type="PackedScene" uid="uid://ddidylp1o4dg2" path="res://scenes/gamePlay/LeftWall.tscn" id="4_tyisr"]
+[ext_resource type="PackedScene" uid="uid://di5btqalgjj3q" path="res://scenes/gamePlay/RightWall.tscn" id="5_dut6b"]
+[ext_resource type="PackedScene" uid="uid://bew01jfprilr" path="res://scenes/gamePlay/Peg.tscn" id="6_30mac"]
+[ext_resource type="PackedScene" uid="uid://djtoeipqgwphp" path="res://scenes/gamePlay/Bumper.tscn" id="7_02hip"]
+[ext_resource type="PackedScene" uid="uid://b03ya11b5bo5r" path="res://scenes/gamePlay/Flippers.tscn" id="8_25wit"]
+
+[node name="PhysicsTest" type="Node2D" unique_id=41022760]
+
+[node name="Camera" parent="." unique_id=767900133 instance=ExtResource("1_6fcg1")]
+position = Vector2(575, 243)
+
+[node name="Node2D" parent="." unique_id=896789467 instance=ExtResource("2_t84yh")]
+
+[node name="Ball" parent="." unique_id=374957024 instance=ExtResource("3_8dcby")]
+position = Vector2(464, 119)
+scale = Vector2(0.5, 0.5)
+
+[node name="Node2D2" parent="." unique_id=1082685119 instance=ExtResource("4_tyisr")]
+
+[node name="Node2D3" parent="." unique_id=230441973 instance=ExtResource("5_dut6b")]
+position = Vector2(46, -46)
+
+[node name="Peg" parent="." unique_id=1192331612 instance=ExtResource("6_30mac")]
+position = Vector2(318, 236)
+
+[node name="Peg3" parent="." unique_id=234524716 instance=ExtResource("6_30mac")]
+position = Vector2(956, 467)
+
+[node name="Peg2" parent="." unique_id=564250930 instance=ExtResource("6_30mac")]
+position = Vector2(160, 468)
+
+[node name="Bumper" parent="." unique_id=1407537393 instance=ExtResource("7_02hip")]
+position = Vector2(395, 392)
+
+[node name="Bumper5" parent="." unique_id=358863029 instance=ExtResource("7_02hip")]
+position = Vector2(818, 365)
+
+[node name="Bumper3" parent="." unique_id=1777831686 instance=ExtResource("7_02hip")]
+position = Vector2(512, 486)
+
+[node name="Bumper2" parent="." unique_id=1063781336 instance=ExtResource("7_02hip")]
+position = Vector2(479, 433)
+
+[node name="Bumper4" parent="." unique_id=1392742751 instance=ExtResource("7_02hip")]
+position = Vector2(723, 489)
+
+[node name="Flippers" parent="." unique_id=1309368954 instance=ExtResource("8_25wit")]
+position = Vector2(206, 402)
+
+[node name="Flippers2" parent="." unique_id=1203122303 instance=ExtResource("8_25wit")]
+position = Vector2(882, 409)
+input_action = "RightFlipper"
+rotation_direction = -1.0
+
+[node name="AnimatedSprite2D" parent="Flippers2" index="0" unique_id=668592814]
+position = Vector2(-36, -39)
+flip_h = true
+
+[node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1203122303, 2074405972) index="0" unique_id=1209279245]
+rotation = 3.1415927
+
+[editable path="Flippers2"]

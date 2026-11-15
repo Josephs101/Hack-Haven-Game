@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b03ya11b5bo5r"]
 
-[ext_resource type="Script" uid="uid://db2q13n3w5bpf" path="res://scenes/flippers.gd" id="1_3tc68"]
+[ext_resource type="Script" uid="uid://db2q13n3w5bpf" path="res://scripts/flippers.gd" id="1_3tc68"]
 [ext_resource type="Texture2D" uid="uid://c2c0bc6dxh6cx" path="res://assets/sprites/flipper_animation.png" id="2_jgsmh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jgsmh"]
