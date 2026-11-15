@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://dk1025l1hjsa7"]
+
+[ext_resource type="Script" uid="uid://dl4yydjtbqlx3" path="res://scenes/gameplay/red_bumper.gd" id="1_lfvn2"]
+[ext_resource type="PackedScene" uid="uid://djtoeipqgwphp" path="res://scenes/gameplay/Bumper.tscn" id="2_3fskq"]
+[ext_resource type="Texture2D" uid="uid://c11gceex17sqg" path="res://assets/sprites/blue_bumper_animation.png" id="3_lfvn2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3fskq"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hgb3"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qbn11"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6rppa"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_otybg"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yy3rv"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ny48j"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(336, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w0tsr"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(384, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0p1s8"]
+atlas = ExtResource("3_lfvn2")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ucolp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3fskq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hgb3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qbn11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6rppa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_otybg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yy3rv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ny48j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w0tsr")
+}],
+"loop": false,
+"name": &"Bounce",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0p1s8")
+}],
+"loop": true,
+"name": &"Rest",
+"speed": 24.0
+}]
+
+[node name="BlueBumper" type="Node2D" unique_id=118269851]
+script = ExtResource("1_lfvn2")
+
+[node name="Bumper" parent="." unique_id=1407537393 instance=ExtResource("2_3fskq")]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1985112362]
+position = Vector2(2, 4)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_ucolp")
+animation = &"Bounce"
+frame = 7
+frame_progress = 1.0
