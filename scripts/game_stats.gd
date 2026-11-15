@@ -58,7 +58,7 @@ const LEVELS := {
 # again and again, each lap hits harder, and every layout is generated.
 const ENDLESS_FIRST_LEVEL := 4
 const ENDLESS_BASE_HP := 220.0
-const ENDLESS_HP_GROWTH := 1.18
+const ENDLESS_HP_GROWTH := 1.75
 
 const ENDLESS_BOSSES := [
 	{"name": "john bounceback slime", "frames": ""},
