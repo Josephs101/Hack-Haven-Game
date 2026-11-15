@@ -32,6 +32,13 @@ func set_boss_health(value: int, maximum: int = -1) -> void:
 		boss_max_hp = maximum
 	boss_hp = clampi(value, 0, boss_max_hp)
 	boss_health_changed.emit(boss_hp, boss_max_hp)
+	
+
+func use_ball() -> bool:
+	if balls_left <= 0:
+		return false
+	set_balls(balls_left - 1)
+	return true
 
 
 func set_balls(value: int) -> void:

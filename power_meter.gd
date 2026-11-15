@@ -9,7 +9,7 @@ var power := 0.0
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if custom_minimum_size == Vector2.ZERO:
-		custom_minimum_size == Vector2(44, 300)
+		custom_minimum_size = Vector2(44, 300)
 
 func set_power(value: float) -> void:
 	power = clampf(value, 0.0, 1.0)
