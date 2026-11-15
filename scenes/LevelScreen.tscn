@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="4_016qk"]
 [ext_resource type="PackedScene" uid="uid://bschmwy2efxap" path="res://scenes/gameplay/pinballTable.tscn" id="5_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://dtxwfc3pqwx0" path="res://scenes/launcher.tscn" id="6_016qk"]
+[ext_resource type="PackedScene" uid="uid://cx5p8ck3issmc" path="res://scenes/round clear.tscn" id="7_round"]
+[ext_resource type="PackedScene" uid="uid://dq24n7i3kw33t" path="res://scenes/UpgradeScreen.tscn" id="8_upgrade"]
 
 [node name="LevelScreen" type="Node2D" unique_id=366287594]
 script = ExtResource("1_qdpy8")
@@ -20,8 +22,14 @@ layer = 10
 [node name="InGameUI" parent="UI" unique_id=98619963 instance=ExtResource("1_wbs0h")]
 
 [node name="GameOver" parent="UI" unique_id=237884269 instance=ExtResource("3_qdpy8")]
+visible = false
 
 [node name="PauseMenu" parent="UI" unique_id=1215738441 instance=ExtResource("4_016qk")]
+visible = false
+
+[node name="RoundClear" parent="UI" unique_id=665306670 instance=ExtResource("7_round")]
+
+[node name="UpgradeScreen" parent="UI" unique_id=1539693046 instance=ExtResource("8_upgrade")]
 visible = false
 
 [node name="pinballTable" parent="." unique_id=282973260 instance=ExtResource("5_qdpy8")]
