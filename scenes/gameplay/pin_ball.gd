@@ -28,6 +28,7 @@ var _rng := RandomNumberGenerator.new()
 
 
 func _ready() -> void:
+	add_to_group("ball")
 	contact_monitor = true
 	max_contacts_reported = 8
 	body_entered.connect(_on_body_entered)
@@ -84,6 +85,11 @@ func _update_trail() -> void:
 	_trail.add_point(global_position)
 	while _trail.get_point_count() > trail_length:
 		_trail.remove_point(0)
+
+
+func clear_trail() -> void:
+	if _trail != null:
+		_trail.clear_points()
 
 
 func _update_stuck(delta: float) -> void:

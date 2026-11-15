@@ -32,6 +32,7 @@ func _on_body_entered(body: Node2D) -> void:
 
 	# Notify the visual bumper
 	bumper_hit.emit()
+	GameStats.bouncer_hit.emit()
 
 	# Score + combo + boss damage. The bumper's body shape is disabled, so the
 	# ball never touches the StaticBody2D — this Area is the only scoring path,

@@ -20,9 +20,6 @@ region = Rect2(112.75624, 103.8312, 95.071106, 74.270485)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6e2fk"]
 bg_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ldle"]
-bg_color = Color(1, 0, 0, 1)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_bossfill"]
 atlas = ExtResource("2_5ldle")
 region = Rect2(10, 179, 97, 26)
@@ -873,6 +870,47 @@ offset_bottom = -3.0
 scale = Vector2(2.4, 2.6799974)
 texture = SubResource("AtlasTexture_gi5p5")
 
+[node name="AbilityContainer" type="PanelContainer" parent="." unique_id=690128255]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 434.0
+offset_right = 111.0
+offset_bottom = 551.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3dk6l")
+
+[node name="AbilityBlock" type="VBoxContainer" parent="AbilityContainer" unique_id=1622299220]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="AbilityCaption" type="Label" parent="AbilityContainer/AbilityBlock" unique_id=2072384180]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94327474, 0.97440475, 0.9917609, 1)
+theme_override_fonts/font = ExtResource("2_6e2fk")
+theme_override_font_sizes/font_size = 16
+text = "ABILITY"
+horizontal_alignment = 2
+
+[node name="RoundsValue" type="Label" parent="AbilityContainer/AbilityBlock" unique_id=1433456019]
+show_behind_parent = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_6e2fk")
+theme_override_font_sizes/font_size = 28
+text = "1"
+horizontal_alignment = 2
+
+[node name="TextureRect2" type="TextureRect" parent="AbilityContainer/AbilityBlock/RoundsValue" unique_id=1586284673]
+show_behind_parent = true
+layout_mode = 0
+offset_left = 12.0
+offset_top = -41.0
+offset_right = 52.0
+offset_bottom = -1.0
+scale = Vector2(2.4, 2.6799974)
+texture = SubResource("AtlasTexture_gi5p5")
+
 [node name="RoundsContainer" type="PanelContainer" parent="." unique_id=610000001]
 layout_mode = 0
 offset_left = 13.0
@@ -935,11 +973,11 @@ frame_progress = 0.38425758
 [node name="DamageOverlay" type="AnimatedSprite2D" parent="TextureRect" unique_id=731649902]
 unique_name_in_owner = true
 visible = false
-speed_scale = 0.5
 position = Vector2(20.045042, 17.79279)
 scale = Vector2(0.98894984, 0.98895)
 sprite_frames = SubResource("SpriteFrames_uktmb")
 animation = &"big_damage"
+speed_scale = 0.5
 
 [node name="notkill" type="AudioStreamPlayer2D" parent="TextureRect" unique_id=97595696]
 stream = ExtResource("8_k4av0")
@@ -994,7 +1032,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 6
 
-[node name="BestReached" type="Label" parent="."]
+[node name="BestReached" type="Label" parent="." unique_id=34454815]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1

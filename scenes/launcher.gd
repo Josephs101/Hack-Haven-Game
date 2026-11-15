@@ -31,7 +31,8 @@ var _last_traj_ready := false
 var _one_way_rids: Array[RID] = []
 
 # Vertical gap between the primary and extra multiball so they do not spawn
-# inside each other (overlapping bodies get ejected unpredictably).
+# inside each other. Extras stack *below* the primary: the space above it is
+# right under the one-way gate, and a ball spawned there gets wedged in it.
 const EXTRA_BALL_OFFSET := 36.0
 
 func _ready() -> void:
@@ -387,34 +388,55 @@ func _follow_spring(frame: int) -> void:
 		_pending_ball.global_position = resting
 
 	for i in range(_pending_extras.size()):
-		_pending_extras[i].global_position = resting + Vector2(0, -EXTRA_BALL_OFFSET * (i + 1))
+		_pending_extras[i].global_position = resting + Vector2(0, EXTRA_BALL_OFFSET * (i + 1))
 
 
 func _launch_pending_ball() -> void:
-	var balls: Array[RigidBody2D] = []
+	var primary := _pending_ball
+	_pending_ball = null
 
-	if _pending_ball != null:
-		balls.append(_pending_ball)
-		_pending_ball = null
-
-	for ball in _pending_extras:
-		balls.append(ball)
+	var extras := _pending_extras.duplicate()
 	_pending_extras.clear()
 
-	for ball in balls:
-		ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+	if primary != null:
+		_launch_ball(primary)
 
-		ball.freeze = false
-		ball.sleeping = false
-		ball.collision_layer = _waiting_layer
-		ball.collision_mask = _waiting_mask
-		# The spring sets the timing; how hard it throws is still the power meter.
-		ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power) \
-			* GameStats.speed_multiplier
+	# Fire the extras from just above the one-way gate, a few frames apart, and
+	# slightly right of the spawn so they do not rub the lane wall.
+	for i in range(extras.size()):
+		await get_tree().create_timer(0.08 * (i + 1)).timeout
+		var ball = extras[i]
+		if is_instance_valid(ball):
+			_launch_ball(ball, Vector2(10.0, -80.0))
 
 
-# Extra balls for the MULTIBALL upgrade. They stack above the first one and are
-# released at the same moment.
+func _launch_ball(ball: RigidBody2D, offset: Vector2 = Vector2.ZERO) -> void:
+	ball.global_position = spawn.global_position + offset
+	ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+	ball.freeze = false
+	ball.sleeping = false
+	ball.collision_layer = _waiting_layer
+	ball.collision_mask = _waiting_mask
+	# The spring sets the timing; how hard it throws is still the power meter.
+	ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power) \
+		* GameStats.speed_multiplier
+	_watch_ball(ball)
+
+
+# Safety net: if a launched ball is still in the narrow launch lane after a
+# moment, move it into the playfield so no ball can stay stuck in the track.
+func _watch_ball(ball: RigidBody2D) -> void:
+	await get_tree().create_timer(0.8, true).timeout
+	if not is_instance_valid(ball) or ball.freeze:
+		return
+
+	if ball.global_position.x < 230.0 and ball.global_position.y > 250.0:
+		ball.global_position = Vector2(320.0, 320.0)
+		ball.linear_velocity = Vector2(250.0, 300.0)
+
+
+# Extra balls for the MULTIBALL upgrade. They stack below the first one and are
+# released at the same moment, so they never start wedged in the one-way gate.
 func _make_pending_ball(stack_index: int) -> RigidBody2D:
 	var ball = ball_scene.instantiate()
 	ball.freeze = true
@@ -422,7 +444,7 @@ func _make_pending_ball(stack_index: int) -> RigidBody2D:
 	ball.collision_layer = 0
 	ball.collision_mask = 0
 	get_parent().add_child(ball)
-	ball.global_position = spawn.global_position + Vector2(0, -EXTRA_BALL_OFFSET * stack_index)
+	ball.global_position = spawn.global_position + Vector2(0, EXTRA_BALL_OFFSET * stack_index)
 	return ball
 
 
