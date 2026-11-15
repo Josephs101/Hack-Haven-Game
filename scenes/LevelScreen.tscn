@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ccrsgcupr7fsv" path="res://scenes/game_over.tscn" id="3_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="4_016qk"]
 [ext_resource type="PackedScene" uid="uid://bschmwy2efxap" path="res://scenes/pinballTable.tscn" id="5_qdpy8"]
+[ext_resource type="PackedScene" uid="uid://dtxwfc3pqwx0" path="res://scenes/launcher.tscn" id="6_016qk"]
 
 [node name="LevelScreen" type="Node2D" unique_id=366287594]
 script = ExtResource("1_qdpy8")
@@ -21,6 +22,9 @@ layer = 10
 [node name="GameOver" parent="UI" unique_id=237884269 instance=ExtResource("3_qdpy8")]
 
 [node name="PauseMenu" parent="UI" unique_id=1215738441 instance=ExtResource("4_016qk")]
+visible = false
 
-[node name="Node2D" parent="." unique_id=282973260 instance=ExtResource("5_qdpy8")]
+[node name="pinballTable" parent="." unique_id=282973260 instance=ExtResource("5_qdpy8")]
 position = Vector2(0, -13)
+
+[node name="launcher" parent="." unique_id=156511213 instance=ExtResource("6_016qk")]
