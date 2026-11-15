@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dw76a2d1tnpk1"]
+
+[ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="1_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bar"]
+atlas = ExtResource("1_sheet")
+region = Rect2(33.484577, 2, 60.515423, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bar"]
+size = Vector2(114.93677, 18.966413)
+
+[node name="BlueBar" type="StaticBody2D" unique_id=409310081 groups=["scoreable"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=425023433]
+scale = Vector2(2, 2)
+texture = SubResource("AtlasTexture_bar")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1290899404]
+position = Vector2(5, 0)
+rotation = 0.31415927
+shape = SubResource("RectangleShape2D_bar")
