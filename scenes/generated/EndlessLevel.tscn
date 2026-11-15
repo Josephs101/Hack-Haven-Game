@@ -1,34 +1,34 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bhpo7p3qrxbs3"]
 
 [ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
-[ext_resource type="Script" path="res://scripts/endless_level.gd" id="2_endless"]
+[ext_resource type="Script" uid="uid://csiu7m0ddssi8" path="res://scripts/endless_level.gd" id="2_endless"]
 [ext_resource type="PackedScene" uid="uid://b03ya11b5bo5r" path="res://scenes/gameplay/Flippers.tscn" id="3_flip"]
 [ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="4_flipr"]
 
-[node name="EndlessLevel" type="Node2D"]
+[node name="EndlessLevel" type="Node2D" unique_id=1323986588]
 script = ExtResource("2_endless")
 
-[node name="LevelScreen" parent="." instance=ExtResource("1_8d8in")]
+[node name="LevelScreen" parent="." unique_id=338866007 instance=ExtResource("1_8d8in")]
 
-[node name="Flippers" parent="." instance=ExtResource("3_flip")]
+[node name="Flippers" parent="." unique_id=1527051361 instance=ExtResource("3_flip")]
 position = Vector2(306, 951)
 
-[node name="Flippers2" parent="." instance=ExtResource("3_flip")]
+[node name="Flippers2" parent="." unique_id=1953108219 instance=ExtResource("3_flip")]
 position = Vector2(635, 949)
 input_action = "RightFlipper"
 rotation_direction = -1.0
 
-[node name="AnimatedSprite2D" parent="Flippers2" index="0"]
+[node name="AnimatedSprite2D" parent="Flippers2" index="0" unique_id=668592814]
 position = Vector2(-36, -39)
 flip_h = true
 
-[node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1366285630, 2074405972) index="0"]
+[node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1953108219, 2074405972) index="0" unique_id=1209279245]
 rotation = 3.1415927
 
-[node name="Flippers3" parent="." instance=ExtResource("3_flip")]
+[node name="Flippers3" parent="." unique_id=662988095 instance=ExtResource("3_flip")]
 position = Vector2(340, 830)
 
-[node name="Flippers4" parent="." instance=ExtResource("4_flipr")]
+[node name="Flippers4" parent="." unique_id=138820497 instance=ExtResource("4_flipr")]
 position = Vector2(620, 830)
 
 [editable path="Flippers2"]
