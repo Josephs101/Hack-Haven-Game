@@ -1,21 +1,21 @@
 [gd_scene format=3 uid="uid://dtj2ywsf54t6q"]
 
 [ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
-[ext_resource type="Script" uid="uid://upn5w3bcx3h5" path="res://scenes/level1.gd" id="1_eugj0"]
+[ext_resource type="Script" path="res://scenes/level1.gd" id="1_eugj0"]
 [ext_resource type="PackedScene" uid="uid://b03ya11b5bo5r" path="res://scenes/gameplay/Flippers.tscn" id="2_e5fgp"]
-[ext_resource type="PackedScene" uid="uid://3unhg68ipx4b" path="res://scenes/gameplay/PinBall.tscn" id="3_ospsn"]
 [ext_resource type="PackedScene" uid="uid://bew01jfprilr" path="res://scenes/gameplay/Peg.tscn" id="5_eugj0"]
-[ext_resource type="PackedScene" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
-[ext_resource type="PackedScene" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
+[ext_resource type="PackedScene" uid="uid://csocqn4oj32a" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
+[ext_resource type="PackedScene" uid="uid://dk1025l1hjsa7" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
+[ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="7_flipr"]
+[ext_resource type="PackedScene" uid="uid://dw76a2d1tnpk1" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
 
 [node name="Level1" type="Node2D" unique_id=1978717256]
 script = ExtResource("1_eugj0")
-level_number = 1
 
 [node name="LevelScreen" parent="." unique_id=366287594 instance=ExtResource("1_8d8in")]
 
 [node name="Flippers" parent="." unique_id=1203122303 instance=ExtResource("2_e5fgp")]
-position = Vector2(306, 951)
+position = Vector2(342, 980)
 
 [node name="Flippers2" parent="." unique_id=1366285630 instance=ExtResource("2_e5fgp")]
 position = Vector2(635, 949)
@@ -23,11 +23,31 @@ input_action = "RightFlipper"
 rotation_direction = -1.0
 
 [node name="AnimatedSprite2D" parent="Flippers2" index="0" unique_id=668592814]
-position = Vector2(-36, -39)
+position = Vector2(-61, -9)
 flip_h = true
 
 [node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1366285630, 2074405972) index="0" unique_id=1209279245]
+position = Vector2(-24, 30)
 rotation = 3.1415927
+
+[node name="Flippers3" parent="." unique_id=1668924306 instance=ExtResource("2_e5fgp")]
+position = Vector2(286, 853)
+
+[node name="Flippers4" parent="." unique_id=1322207619 instance=ExtResource("7_flipr")]
+position = Vector2(670, 853)
+
+[node name="BlueBar" parent="." unique_id=596818552 instance=ExtResource("8_bar")]
+position = Vector2(390, 500)
+
+[node name="BlueBar2" parent="." unique_id=1895964350 instance=ExtResource("8_bar")]
+position = Vector2(570, 500)
+
+[node name="Sprite2D" parent="BlueBar2" index="0" unique_id=425023433]
+flip_h = true
+
+[node name="CollisionShape2D" parent="BlueBar2" index="1" unique_id=1290899404]
+position = Vector2(-0.3633423, 0.12866211)
+rotation = -0.3403392
 
 [node name="Peg" parent="." unique_id=1192331612 instance=ExtResource("5_eugj0")]
 position = Vector2(485, 530)
@@ -45,10 +65,10 @@ position = Vector2(677, 302)
 position = Vector2(275, 303)
 
 [node name="Peg2" parent="." unique_id=2110615976 instance=ExtResource("5_eugj0")]
-position = Vector2(549, 850)
+position = Vector2(553, 786)
 
 [node name="Peg5" parent="." unique_id=1355642591 instance=ExtResource("5_eugj0")]
-position = Vector2(404, 851)
+position = Vector2(413, 791)
 
 [node name="Peg3" parent="." unique_id=1572626248 instance=ExtResource("5_eugj0")]
 position = Vector2(665, 532)
@@ -75,3 +95,4 @@ position = Vector2(481, 345)
 position = Vector2(486, 592)
 
 [editable path="Flippers2"]
+[editable path="BlueBar2"]

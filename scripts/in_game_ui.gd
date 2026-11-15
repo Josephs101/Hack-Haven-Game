@@ -40,11 +40,15 @@ const REMAINING_COLOR_STOPS := [
 @onready var combo_value: Label = %ComboValue
 @onready var boss_name_label: Label = %BossName
 @onready var modifiers_list: VBoxContainer = %ModifiersList
+@onready var best_reached: Label = %BestReached
 
 const HUD_FONT := preload("res://assets/font(s)/Minecraft.ttf")
 
 var _boss_tween: Tween = null
 var _default_boss_frames: SpriteFrames = null
+var _default_frame_height := 32.0
+var _idle_anim := &"idle"
+var _jump_anim := &"bouncy"
 
 @export_group("Combo Shake")
 ## Degrees of tilt added per combo step.
@@ -78,6 +82,7 @@ func _ready() -> void:
 	GameStats.balls_changed.connect(_on_balls_changed)
 	GameStats.rounds_changed.connect(_on_rounds_changed)
 	GameStats.upgrades_changed.connect(_on_upgrades_changed)
+	GameStats.best_bosses_changed.connect(_on_best_bosses_changed)
 
 	boss_bar.max_value = GameStats.boss_max_hp
 	boss_bar.value = GameStats.boss_hp
@@ -90,15 +95,17 @@ func _ready() -> void:
 	_on_balls_changed(GameStats.balls_left)
 	_on_rounds_changed(GameStats.rounds_left)
 	_on_upgrades_changed()
+	_refresh_best_reached()
 
 	combo_value.resized.connect(_recenter_combo_pivot)
 	call_deferred("_cache_combo_origin")
 
 	rng.randomize()
 	_default_boss_frames = boss_sprite.sprite_frames
+	_default_frame_height = _first_frame_height(_default_boss_frames)
 	_apply_boss_frames(GameStats.boss_frames_path)
 	boss_sprite.animation_finished.connect(_on_boss_animation_finished)
-	boss_sprite.play("idle")
+	boss_sprite.play(_idle_anim)
 	_schedule_boss_jump()
 
 
@@ -216,8 +223,48 @@ func _apply_boss_frames(frames_path: String) -> void:
 	if boss_sprite.sprite_frames != frames:
 		boss_sprite.sprite_frames = frames
 
-	if frames.has_animation(&"idle"):
-		boss_sprite.play(&"idle")
+	_pick_animations(frames)
+	_align_boss_sprite(frames)
+
+	if frames.has_animation(_idle_anim):
+		boss_sprite.play(_idle_anim)
+
+
+# Boss sheets don't agree on animation names: the slime and cyclops use
+# idle / bouncy, while the mini boss ships mini-idle / mini-jump.
+func _pick_animations(frames: SpriteFrames) -> void:
+	if frames.has_animation(&"mini-idle"):
+		_idle_anim = &"mini-idle"
+		_jump_anim = &"mini-jump" if frames.has_animation(&"mini-jump") else &"mini-idle"
+	else:
+		_idle_anim = &"idle"
+		_jump_anim = &"bouncy"
+
+
+func _first_frame_height(frames: SpriteFrames) -> float:
+	if frames == null or not frames.has_animation(&"idle"):
+		return 32.0
+
+	var texture := frames.get_frame_texture(&"idle", 0)
+	if texture == null:
+		return 32.0
+
+	return float(texture.get_height())
+
+
+# The mini boss sheet is 32x64, so its art would sit lower in the HUD than the
+# 32x32 bosses. Nudge the sprite up by half the height difference.
+func _align_boss_sprite(frames: SpriteFrames) -> void:
+	if not frames.has_animation(_idle_anim):
+		boss_sprite.offset = Vector2.ZERO
+		return
+
+	var texture := frames.get_frame_texture(_idle_anim, 0)
+	if texture == null:
+		boss_sprite.offset = Vector2.ZERO
+		return
+
+	boss_sprite.offset = Vector2(0, -(texture.get_height() - _default_frame_height) * 0.5)
 
 
 func _on_score_changed(value: int) -> void:
@@ -283,13 +330,30 @@ func _schedule_boss_jump() -> void:
 
 	await get_tree().create_timer(wait_time).timeout
 
-	boss_sprite.play("bouncy")
+	boss_sprite.play(_jump_anim)
 
 
 func _on_boss_animation_finished() -> void:
-	if boss_sprite.animation == "bouncy":
-		boss_sprite.play("idle")
+	if boss_sprite.animation == _jump_anim:
+		boss_sprite.play(_idle_anim)
 		_schedule_boss_jump()
+
+
+# The furthest run ever, shown under the modifiers so the target is visible
+# while playing. Updates the moment a new record is set.
+func _refresh_best_reached() -> void:
+	var best := GameStats.best_bosses
+
+	if best <= 0:
+		best_reached.text = "BEST: 0 BOSSES"
+		return
+
+	var noun := "BOSS" if best == 1 else "BOSSES"
+	best_reached.text = "BEST: %d %s" % [best, noun]
+
+
+func _on_best_bosses_changed(_best: int) -> void:
+	_refresh_best_reached()
 
 
 # Rebuilds the little list of upgrades picked so far.

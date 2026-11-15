@@ -9,6 +9,24 @@ func _ready() -> void:
 	%Quit.pressed.connect(_on_quit)
 	%NewRun.grab_focus()
 
+	GameStats.best_bosses_changed.connect(_on_best_changed)
+	_refresh_best()
+
+
+func _refresh_best() -> void:
+	var best := GameStats.best_bosses
+
+	if best <= 0:
+		%BestScore.text = "NO BOSSES BEATEN YET"
+		return
+
+	var noun := "BOSS" if best == 1 else "BOSSES"
+	%BestScore.text = "BEST: %d %s" % [best, noun]
+
+
+func _on_best_changed(_best: int) -> void:
+	_refresh_best()
+
 
 func _on_new_run() -> void:
 	GameStats.reset()
