@@ -43,8 +43,7 @@ const UPGRADES := {
 	"extra_ball": {
 		"name": "EXTRA BALL",
 		"desc": "+1 ball every round",
-		"icon": "res://assets/icons/extra_ball.png",
-		"color": Color(0.35, 0.8, 1.0),
+		"icon": "res://assets/sprites/extra_ball.png",
 	},
 	"heavy_bones": {
 		"name": "HEAVY BONES",
@@ -55,19 +54,16 @@ const UPGRADES := {
 		"name": "LOW GRAVITY",
 		"desc": "Balls fall slower",
 		"icon": "res://assets/sprites/low_gravity.png",
-		"color": Color(0.6, 0.5, 1.0),
 	},
 	"ultraspeed": {
 		"name": "ULTRASPEED",
 		"desc": "+50% launch speed",
-		"icon": "res://assets/icons/ultraspeed.png",
-		"color": Color(1.0, 0.85, 0.2),
+		"icon": "res://assets/sprites/ultraspeed.png",
 	},
 	"multiball": {
 		"name": "MULTIBALL",
 		"desc": "+1 ball per launch",
-		"icon": "res://assets/icons/multiball.png",
-		"color": Color(1.0, 0.4, 0.7),
+		"icon": "res://assets/sprites/extra_ball.png",
 	},
 }
 
@@ -97,7 +93,7 @@ var extra_balls := 0
 var damage_multiplier := 1.0
 var gravity_multiplier := 1.0
 var speed_multiplier := 1.0
-var multiball_enabled := false
+var multiball_extra := 0
 
 var _combo_time := 0.0
 var _boss_down_emitted := false
@@ -213,7 +209,7 @@ func _scaled_hp(base_hp: int) -> int:
 
 # Restart current level with a clean run score.
 func reset() -> void:
-	start_run(current_level)
+	start_run(level_numbers()[0])
 
 
 func register_hit(base_points: int = BASE_HIT_POINTS) -> void:
@@ -317,7 +313,7 @@ func apply_upgrade(id: String) -> void:
 		"ultraspeed":
 			speed_multiplier += 0.2
 		"multiball":
-			multiball_enabled = true
+			multiball_extra += 1
 
 	upgrades_changed.emit()
 
@@ -339,5 +335,5 @@ func _reset_upgrades() -> void:
 	damage_multiplier = 1.0
 	gravity_multiplier = 1.0
 	speed_multiplier = 1.0
-	multiball_enabled = false
+	multiball_extra = 0
 	upgrades_changed.emit()

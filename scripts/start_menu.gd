@@ -7,6 +7,9 @@ func _ready() -> void:
 	get_tree().paused = false
 	%NewRun.pressed.connect(_on_new_run)
 	%Quit.pressed.connect(_on_quit)
+	# Remove Godot's focus outline on the flat menu buttons.
+	for button in [%NewRun, %Quit]:
+		button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	%NewRun.grab_focus()
 
 

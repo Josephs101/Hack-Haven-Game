@@ -35,6 +35,7 @@ const REMAINING_COLOR_STOPS := [
 @onready var rounds_value: Label = %RoundsValue
 @onready var boss_value: Label = %BossHealthLabel
 @onready var boss_sprite: AnimatedSprite2D = %AnimatedSprite2D
+@onready var damage_overlay: AnimatedSprite2D = %DamageOverlay
 @export var min_jump_interval: float = 2.0
 @export var max_jump_interval: float = 5.0
 @onready var combo_value: Label = %ComboValue
@@ -45,6 +46,19 @@ const HUD_FONT := preload("res://assets/font(s)/Minecraft.ttf")
 
 var _boss_tween: Tween = null
 var _default_boss_frames: SpriteFrames = null
+
+# Boss damage reaction animations. These names must match the animations in the
+# boss SpriteFrames; change them if you named yours differently.
+const BOSS_SMALL_DAMAGE := &"small_damage"
+const BOSS_BIG_DAMAGE := &"big_damage"
+const BOSS_KILL := &"kill"
+
+## A hit that removes at least this fraction of the boss's max HP is "big".
+@export var big_damage_fraction := 0.25
+
+var _last_boss_hp := -1
+var _boss_busy := false
+var _jump_timer: Timer = null
 
 @export_group("Combo Shake")
 ## Degrees of tilt added per combo step.
@@ -99,6 +113,15 @@ func _ready() -> void:
 	_apply_boss_frames(GameStats.boss_frames_path)
 	boss_sprite.animation_finished.connect(_on_boss_animation_finished)
 	boss_sprite.play("idle")
+
+	if damage_overlay != null:
+		damage_overlay.visible = false
+		damage_overlay.animation_finished.connect(_on_damage_overlay_finished)
+
+	_jump_timer = Timer.new()
+	_jump_timer.one_shot = true
+	_jump_timer.timeout.connect(_on_jump_timeout)
+	add_child(_jump_timer)
 	_schedule_boss_jump()
 
 
@@ -213,6 +236,12 @@ func _apply_boss_frames(frames_path: String) -> void:
 	if frames == null:
 		return
 
+	# A new boss starts visible again, with no lingering kill overlay.
+	boss_sprite.visible = true
+	if damage_overlay != null:
+		damage_overlay.visible = false
+	_boss_busy = false
+
 	if boss_sprite.sprite_frames != frames:
 		boss_sprite.sprite_frames = frames
 
@@ -228,6 +257,11 @@ func _on_score_changed(value: int) -> void:
 
 
 func _on_boss_health_changed(hp: int, max_hp: int) -> void:
+	var damage := 0
+	if _last_boss_hp >= 0:
+		damage = maxi(0, _last_boss_hp - hp)
+	_last_boss_hp = hp
+
 	boss_bar.max_value = max_hp
 	boss_value.text = "%d / %d" % [hp, max_hp]
 
@@ -241,6 +275,9 @@ func _on_boss_health_changed(hp: int, max_hp: int) -> void:
 	boss_bar.modulate = Color(2.0, 2.0, 2.0, 1.0)
 	var flash := create_tween()
 	flash.tween_property(boss_bar, "modulate", Color.WHITE, 0.35)
+
+	if damage > 0:
+		_play_damage_animation(damage, max_hp, hp)
 
 
 func _on_balls_changed(left: int) -> void:
@@ -276,20 +313,58 @@ func _tint_remaining(label: Label, left: int, maximum: int) -> void:
 
 
 func _schedule_boss_jump() -> void:
-	var wait_time = rng.randf_range(
-		min_jump_interval,
-		max_jump_interval
-	)
+	if _jump_timer == null:
+		return
+	_jump_timer.start(rng.randf_range(min_jump_interval, max_jump_interval))
 
-	await get_tree().create_timer(wait_time).timeout
 
-	boss_sprite.play("bouncy")
+func _on_jump_timeout() -> void:
+	if _boss_busy:
+		_schedule_boss_jump()
+		return
+
+	boss_sprite.play(&"bouncy")
 
 
 func _on_boss_animation_finished() -> void:
-	if boss_sprite.animation == "bouncy":
-		boss_sprite.play("idle")
+	if boss_sprite.animation == &"bouncy":
+		boss_sprite.play(&"idle")
 		_schedule_boss_jump()
+
+
+# Plays the shared damage overlay on top of the boss. Small vs big is decided
+# by how much of the boss's max HP the hit removed; a killing blow uses kill.
+func _play_damage_animation(damage: int, max_hp: int, hp: int) -> void:
+	if damage_overlay == null or damage_overlay.sprite_frames == null:
+		return
+
+	var anim_name := BOSS_SMALL_DAMAGE
+	if hp <= 0:
+		anim_name = BOSS_KILL
+	elif max_hp > 0 and float(damage) / float(max_hp) >= big_damage_fraction:
+		anim_name = BOSS_BIG_DAMAGE
+
+	if not damage_overlay.sprite_frames.has_animation(anim_name):
+		return
+
+	if _jump_timer != null:
+		_jump_timer.stop()
+	_boss_busy = true
+
+	damage_overlay.visible = true
+	damage_overlay.play(anim_name)
+
+
+func _on_damage_overlay_finished() -> void:
+	var finished := damage_overlay.animation
+	damage_overlay.visible = false
+	_boss_busy = false
+
+	if finished == BOSS_KILL:
+		boss_sprite.visible = false
+		return
+
+	_schedule_boss_jump()
 
 
 # Rebuilds the little list of upgrades picked so far.
@@ -299,10 +374,10 @@ func _on_upgrades_changed() -> void:
 
 	for upgrade in GameStats.get_upgrades():
 		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 8)
+		row.add_theme_constant_override("separation", 6)
 
 		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(32, 32)
+		icon.custom_minimum_size = Vector2(20, 20)
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.texture = _load_upgrade_icon(upgrade)
 		row.add_child(icon)
@@ -310,7 +385,7 @@ func _on_upgrades_changed() -> void:
 		var label := Label.new()
 		label.add_theme_font_override("font", HUD_FONT)
 		label.text = str(upgrade.get("name", ""))
-		label.add_theme_font_size_override("font_size", 16)
+		label.add_theme_font_size_override("font_size", 12)
 		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(label)
 
