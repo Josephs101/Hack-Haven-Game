@@ -19,6 +19,10 @@ signal peg_hit(combo: int)
 # it happened. The floating "+N" popups listen to this.
 signal points_awarded(amount: int, world_position: Vector2)
 
+# Fired when a ball drains, with the damage that ball was worth and the damage
+# banked for the level so far. The centre-screen damage readout listens to this.
+signal ball_damage(amount: int, total: int)
+
 const BASE_HIT_POINTS := 10
 const MULTIPLIER_PER_COMBO := 0.1
 const POINTS_PER_DAMAGE := 10
@@ -115,6 +119,7 @@ var balls_left := 3
 var active_balls := 0
 var pending_points := 0
 var level_damage := 0
+var _reported_damage := 0
 var upgrades: Array[Dictionary] = []
 
 # Run-wide modifiers applied by upgrades.
@@ -164,6 +169,7 @@ func start_level(level_number: int) -> void:
 	score = 0
 	pending_points = 0
 	level_damage = 0
+	_reported_damage = 0
 
 	boss_name = str(data["name"])
 	boss_max_hp = int(data["max_hp"])
@@ -258,9 +264,34 @@ func use_ball() -> bool:
 
 func ball_drained() -> void:
 	active_balls = maxi(0, active_balls - 1)
+	_report_ball_damage()
 
 	if balls_left <= 0 and active_balls == 0:
 		finish_ball_set()
+
+
+# Single place where points become boss damage. Everything that needs to know
+# a damage number goes through here, so changing how score converts (a different
+# ratio, a curve, upgrades) only has to be done once.
+func damage_from_points(points: int) -> int:
+	if points <= 0:
+		return 0
+
+	return int(round(float(points) / float(POINTS_PER_DAMAGE) * damage_multiplier))
+
+
+# Tells the HUD how much damage the ball that just drained was worth. Reported
+# as the change in converted damage rather than a fresh conversion, so the
+# numbers still add up whatever the conversion does.
+func _report_ball_damage() -> void:
+	var total := damage_from_points(pending_points)
+	var gained := total - _reported_damage
+	_reported_damage = total
+
+	if gained <= 0:
+		return
+
+	ball_damage.emit(gained, total)
 
 
 # Use one round. Returns true and starts a new ball set if a round remains.
@@ -280,7 +311,7 @@ func finish_ball_set() -> void:
 	if boss_hp <= 0 and _boss_down_emitted:
 		return
 
-	var total_damage := int(round(pending_points / float(POINTS_PER_DAMAGE) * damage_multiplier))
+	var total_damage := damage_from_points(pending_points)
 	var damage_this_set := total_damage - level_damage
 	level_damage = total_damage
 
