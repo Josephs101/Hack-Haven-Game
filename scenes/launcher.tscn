@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://dtxwfc3pqwx0"]
+
+[ext_resource type="Script" uid="uid://8oynuhudenpj" path="res://power_meter.gd" id="1_ut831"]
+
+[node name="Node2D" type="Node2D" unique_id=156511213]
+
+[node name="Spring" type="Sprite2D" parent="." unique_id=2131879896]
+
+[node name="SpringAnimation" type="AnimationPlayer" parent="." unique_id=2078585003]
+
+[node name="BallSpawn" type="Marker2D" parent="." unique_id=1642853840]
+
+[node name="PowerMeter" type="Control" parent="." unique_id=301201703]
+custom_minimum_size = Vector2(44, 300)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 123.00001
+offset_top = 917.0
+offset_right = 167.0
+offset_bottom = 1217.0
+scale = Vector2(0.7174157, 0.43553472)
+script = ExtResource("1_ut831")
