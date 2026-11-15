@@ -32,8 +32,8 @@ func _close() -> void:
 
 func _on_restart() -> void:
 	get_tree().paused = false
-	GameStats.reset()
-	get_tree().reload_current_scene()
+	GameStats.start_run(1)
+	get_tree().change_scene_to_file("res://scenes/level1/Level1.tscn")
 
 func _on_quit() -> void:
 	get_tree().paused = false

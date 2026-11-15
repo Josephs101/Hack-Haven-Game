@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cn6lue20cmnf"
+path="res://.godot/imported/SLIME 1.mp3-e45383167a764df40002c600751b5d11.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/SLIME 1.mp3"
+dest_files=["res://.godot/imported/SLIME 1.mp3-e45383167a764df40002c600751b5d11.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -18,10 +18,14 @@ var _charge_time := 0.0
 var _power := 0.0
 var _can_launch := true
 var _pending_ball: RigidBody2D = null
-var _pending_extra: RigidBody2D = null
+var _pending_extras: Array[RigidBody2D] = []
 var _pending_power := 0.0
 var _spring_tops: Array[float] = []
 var _release_frame := 14
+
+# Vertical gap between the primary and extra multiball so they do not spawn
+# inside each other (overlapping bodies get ejected unpredictably).
+const EXTRA_BALL_OFFSET := 36.0
 
 func _ready() -> void:
 	anim.frame_changed.connect(_on_spring_frame_changed)
@@ -141,9 +145,9 @@ func _confirm_launch() -> void:
 	_waiting_ball = null
 	_pending_power = _power
 
-	_pending_extra = null
-	if GameStats.multiball_enabled:
-		_pending_extra = _make_pending_ball()
+	_pending_extras.clear()
+	for i in range(GameStats.multiball_extra):
+		_pending_extras.append(_make_pending_ball(i + 1))
 		GameStats.active_balls += 1
 
 	anim.play("launch")
@@ -207,8 +211,8 @@ func _follow_spring(frame: int) -> void:
 	if _pending_ball != null:
 		_pending_ball.global_position = resting
 
-	if _pending_extra != null:
-		_pending_extra.global_position = resting
+	for i in range(_pending_extras.size()):
+		_pending_extras[i].global_position = resting + Vector2(0, -EXTRA_BALL_OFFSET * (i + 1))
 
 
 func _launch_pending_ball() -> void:
@@ -218,9 +222,9 @@ func _launch_pending_ball() -> void:
 		balls.append(_pending_ball)
 		_pending_ball = null
 
-	if _pending_extra != null:
-		balls.append(_pending_extra)
-		_pending_extra = null
+	for ball in _pending_extras:
+		balls.append(ball)
+	_pending_extras.clear()
 
 	for ball in balls:
 		ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
@@ -234,16 +238,16 @@ func _launch_pending_ball() -> void:
 			* GameStats.speed_multiplier
 
 
-# Second ball for the MULTIBALL upgrade. It sits on the spring with the first
-# one and is released at the same moment.
-func _make_pending_ball() -> RigidBody2D:
+# Extra balls for the MULTIBALL upgrade. They stack above the first one and are
+# released at the same moment.
+func _make_pending_ball(stack_index: int) -> RigidBody2D:
 	var ball = ball_scene.instantiate()
 	ball.freeze = true
 	ball.sleeping = true
 	ball.collision_layer = 0
 	ball.collision_mask = 0
 	get_parent().add_child(ball)
-	ball.global_position = spawn.global_position
+	ball.global_position = spawn.global_position + Vector2(0, -EXTRA_BALL_OFFSET * stack_index)
 	return ball
 
 

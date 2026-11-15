@@ -1,16 +1,15 @@
 [gd_scene format=3 uid="uid://dtj2ywsf54t6q"]
 
 [ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
-[ext_resource type="Script" uid="uid://upn5w3bcx3h5" path="res://scenes/level1.gd" id="1_eugj0"]
+[ext_resource type="Script" path="res://scenes/level1.gd" id="1_eugj0"]
 [ext_resource type="PackedScene" uid="uid://b03ya11b5bo5r" path="res://scenes/gameplay/Flippers.tscn" id="2_e5fgp"]
-[ext_resource type="PackedScene" uid="uid://3unhg68ipx4b" path="res://scenes/gameplay/PinBall.tscn" id="3_ospsn"]
 [ext_resource type="PackedScene" uid="uid://bew01jfprilr" path="res://scenes/gameplay/Peg.tscn" id="5_eugj0"]
-[ext_resource type="PackedScene" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
-[ext_resource type="PackedScene" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
+[ext_resource type="PackedScene" uid="uid://csocqn4oj32a" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
+[ext_resource type="PackedScene" uid="uid://dk1025l1hjsa7" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
+[ext_resource type="AudioStream" uid="uid://cn6lue20cmnf" path="res://assets/sound/SLIME 1.mp3" id="7_eugj0"]
 
 [node name="Level1" type="Node2D" unique_id=1978717256]
 script = ExtResource("1_eugj0")
-level_number = 1
 
 [node name="LevelScreen" parent="." unique_id=366287594 instance=ExtResource("1_8d8in")]
 
@@ -73,5 +72,10 @@ position = Vector2(481, 345)
 
 [node name="BlueBumper2" parent="." unique_id=1352033609 instance=ExtResource("6_vc60b")]
 position = Vector2(486, 592)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1802277281]
+stream = ExtResource("7_eugj0")
+volume_db = 24.0
+autoplay = true
 
 [editable path="Flippers2"]
