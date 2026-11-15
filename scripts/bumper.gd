@@ -1,8 +1,9 @@
 
 extends StaticBody2D
 
-@export var min_outward_speed: float = 200.0
+@export var min_outward_speed: float = 500.0
 
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 func _ready() -> void:
 	$BumperArea.body_entered.connect(_on_body_entered)
 
@@ -29,5 +30,7 @@ func _on_body_entered(body: Node2D) -> void:
 		var additional_speed = min_outward_speed - outward_speed
 
 		body.linear_velocity = current_velocity + direction * additional_speed
-
+	
+	# Play Animation
+	sprite.play("bounce")
 	body.sleeping = false

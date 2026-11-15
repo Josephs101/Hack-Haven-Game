@@ -11,7 +11,7 @@ radius = 16.0
 
 [node name="Ball (RigidBody2D)" type="RigidBody2D" unique_id=1920199290]
 physics_material_override = SubResource("PhysicsMaterial_002rf")
-gravity_scale = 1.5
+gravity_scale = 0.3
 continuous_cd = 2
 linear_damp = 0.1
 angular_damp = 1.0

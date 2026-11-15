@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dtj2ywsf54t6q"]
+
+[ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
+[ext_resource type="PackedScene" uid="uid://b03ya11b5bo5r" path="res://scenes/gameplay/Flippers.tscn" id="2_e5fgp"]
+[ext_resource type="PackedScene" uid="uid://3unhg68ipx4b" path="res://scenes/gameplay/PinBall.tscn" id="3_ospsn"]
+[ext_resource type="PackedScene" uid="uid://bew01jfprilr" path="res://scenes/gameplay/Peg.tscn" id="5_eugj0"]
+[ext_resource type="PackedScene" uid="uid://csocqn4oj32a" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
+
+[node name="Level1" type="Node2D" unique_id=1978717256]
+
+[node name="LevelScreen" parent="." unique_id=366287594 instance=ExtResource("1_8d8in")]
+
+[node name="Flippers" parent="." unique_id=1203122303 instance=ExtResource("2_e5fgp")]
+position = Vector2(306, 951)
+
+[node name="Flippers2" parent="." unique_id=1366285630 instance=ExtResource("2_e5fgp")]
+position = Vector2(635, 949)
+input_action = "RightFlipper"
+rotation_direction = -1.0
+
+[node name="AnimatedSprite2D" parent="Flippers2" index="0" unique_id=668592814]
+position = Vector2(-36, -39)
+flip_h = true
+
+[node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1366285630, 2074405972) index="0" unique_id=1209279245]
+rotation = 3.1415927
+
+[node name="Ball (RigidBody2D)" parent="." unique_id=1920199290 instance=ExtResource("3_ospsn")]
+position = Vector2(477, 286)
+
+[node name="Peg" parent="." unique_id=1192331612 instance=ExtResource("5_eugj0")]
+position = Vector2(313, 718)
+
+[node name="Peg2" parent="." unique_id=2110615976 instance=ExtResource("5_eugj0")]
+position = Vector2(576, 723)
+
+[node name="Peg3" parent="." unique_id=1572626248 instance=ExtResource("5_eugj0")]
+position = Vector2(654, 508)
+
+[node name="Peg4" parent="." unique_id=1458433199 instance=ExtResource("5_eugj0")]
+position = Vector2(317, 526)
+
+[node name="RedBumper" parent="." unique_id=118269851 instance=ExtResource("5_ospsn")]
+position = Vector2(471, 909)
+
+[node name="RedBumper2" parent="." unique_id=2000380747 instance=ExtResource("5_ospsn")]
+position = Vector2(444, 631)
+
+[editable path="Flippers2"]
