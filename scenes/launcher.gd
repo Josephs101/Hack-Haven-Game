@@ -18,6 +18,7 @@ var _charge_time := 0.0
 var _power := 0.0
 var _can_launch := true
 var _pending_ball: RigidBody2D = null
+var _pending_extra: RigidBody2D = null
 var _pending_power := 0.0
 var _spring_tops: Array[float] = []
 var _release_frame := 14
@@ -140,6 +141,11 @@ func _confirm_launch() -> void:
 	_waiting_ball = null
 	_pending_power = _power
 
+	_pending_extra = null
+	if GameStats.multiball_enabled:
+		_pending_extra = _make_pending_ball()
+		GameStats.active_balls += 1
+
 	anim.play("launch")
 
 	await anim.animation_finished
@@ -196,22 +202,49 @@ func _follow_spring(frame: int) -> void:
 
 	var index := clampi(frame, 0, _spring_tops.size() - 1)
 	var dip := (_spring_tops[index] - _spring_tops[0]) * anim.scale.y
+	var resting := spawn.global_position + Vector2.DOWN * dip
 
-	_pending_ball.global_position = spawn.global_position + Vector2.DOWN * dip
+	if _pending_ball != null:
+		_pending_ball.global_position = resting
+
+	if _pending_extra != null:
+		_pending_extra.global_position = resting
 
 
 func _launch_pending_ball() -> void:
-	var ball := _pending_ball
-	_pending_ball = null
+	var balls: Array[RigidBody2D] = []
 
-	ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+	if _pending_ball != null:
+		balls.append(_pending_ball)
+		_pending_ball = null
 
-	ball.freeze = false
-	ball.sleeping = false
-	ball.collision_layer = _waiting_layer
-	ball.collision_mask = _waiting_mask
-	# The spring sets the timing; how hard it throws is still the power meter.
-	ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power)
+	if _pending_extra != null:
+		balls.append(_pending_extra)
+		_pending_extra = null
+
+	for ball in balls:
+		ball.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
+
+		ball.freeze = false
+		ball.sleeping = false
+		ball.collision_layer = _waiting_layer
+		ball.collision_mask = _waiting_mask
+		# The spring sets the timing; how hard it throws is still the power meter.
+		ball.linear_velocity = Vector2.UP * lerpf(min_speed, max_speed, _pending_power) \
+			* GameStats.speed_multiplier
+
+
+# Second ball for the MULTIBALL upgrade. It sits on the spring with the first
+# one and is released at the same moment.
+func _make_pending_ball() -> RigidBody2D:
+	var ball = ball_scene.instantiate()
+	ball.freeze = true
+	ball.sleeping = true
+	ball.collision_layer = 0
+	ball.collision_mask = 0
+	get_parent().add_child(ball)
+	ball.global_position = spawn.global_position
+	return ball
 
 
 func arm() -> void:
