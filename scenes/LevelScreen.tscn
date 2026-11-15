@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://d3fllhpsu5wyc" path="res://scripts/level_screen.gd" id="1_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://djkd6f5gk1l6u" path="res://scenes/InGameUI.tscn" id="1_wbs0h"]
-[ext_resource type="Texture2D" uid="uid://b2ond01r7qu3b" path="res://assets/sprites/sky_.png" id="2_6dn54"]
+[ext_resource type="Texture2D" uid="uid://bgncdv8hq8380" path="res://assets/sprites/sky_2_ky_.png" id="2_75u8g"]
+[ext_resource type="Texture2D" uid="uid://bm45ounbrhqsh" path="res://assets/sprites/Foreground.png" id="3_oij81"]
 [ext_resource type="PackedScene" uid="uid://ccrsgcupr7fsv" path="res://scenes/game_over.tscn" id="3_qdpy8"]
 [ext_resource type="PackedScene" uid="uid://3pfeu4grg100" path="res://scenes/pause_menu.tscn" id="4_016qk"]
 [ext_resource type="PackedScene" uid="uid://bschmwy2efxap" path="res://scenes/gameplay/pinballTable.tscn" id="5_qdpy8"]
@@ -19,8 +20,16 @@ autoscroll = Vector2(200, 0)
 ignore_camera_scroll = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D" unique_id=196913033]
-position = Vector2(129, 548)
-texture = ExtResource("2_6dn54")
+position = Vector2(129, 534.5)
+scale = Vector2(1, 1.025)
+texture = ExtResource("2_75u8g")
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=261156044]
+offset_left = -1.0
+offset_right = 1079.0
+offset_bottom = 1080.0
+scale = Vector2(1, 1.0054541)
+texture = ExtResource("3_oij81")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=509355009]
 offset_right = 1092.0
