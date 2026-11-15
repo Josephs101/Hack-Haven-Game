@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 func _refresh_best() -> void:
-	var best := GameStats.best_bosses
+	var best: int = GameStats.best_bosses
 
 	if best <= 0:
 		%BestScore.text = "NO BOSSES BEATEN YET"

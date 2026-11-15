@@ -31,12 +31,12 @@ offset_bottom = 1080.0
 scale = Vector2(1, 1.0054541)
 texture = ExtResource("3_oij81")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=509355009]
-offset_right = 1092.0
-offset_bottom = 128.0
-
 [node name="UI" type="CanvasLayer" parent="." unique_id=1305315445]
 layer = 10
+
+[node name="UpgradeScreen" parent="UI" unique_id=1539693046 instance=ExtResource("8_upgrade")]
+visible = false
+z_index = 2
 
 [node name="InGameUI" parent="UI" unique_id=98619963 instance=ExtResource("1_wbs0h")]
 
@@ -48,12 +48,14 @@ visible = false
 
 [node name="RoundClear" parent="UI" unique_id=665306670 instance=ExtResource("7_round")]
 visible = false
+z_index = 1
 
-[node name="UpgradeScreen" parent="UI" unique_id=1539693046 instance=ExtResource("8_upgrade")]
-visible = false
-
-[node name="pinballTable" parent="." unique_id=282973260 instance=ExtResource("5_qdpy8")]
-position = Vector2(0, -13)
+[node name="TextureRect" type="TextureRect" parent="." unique_id=509355009]
+offset_right = 1092.0
+offset_bottom = 128.0
 
 [node name="launcher" parent="." unique_id=156511213 instance=ExtResource("6_016qk")]
 position = Vector2(176, 996)
+
+[node name="pinballTable" parent="." unique_id=282973260 instance=ExtResource("5_qdpy8")]
+position = Vector2(0, -13)
