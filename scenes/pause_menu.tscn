@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://3pfeu4grg100"]
 
 [ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_myx47"]
-[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="1_n87rw"]
+[ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="2_myx47"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kukqi"]
+atlas = ExtResource("2_myx47")
+region = Rect2(96.138275, 223.33351, 32.6279, 32.373)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5d2l8"]
 
 [node name="PauseMenu" type="Control" unique_id=237595338]
 process_mode = 3
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +18,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_myx47")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=602607728]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 0
+offset_left = 286.0
+offset_top = 315.0
+offset_right = 786.0
+offset_bottom = 738.0
+texture = SubResource("AtlasTexture_kukqi")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=667783994]
 layout_mode = 1
@@ -35,11 +49,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=602607728]
-custom_minimum_size = Vector2(500, 300)
-layout_mode = 2
-texture = ExtResource("1_n87rw")
-
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=586981699]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
@@ -60,6 +69,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "RESUME"
+icon = SubResource("AtlasTexture_5d2l8")
 flat = true
 
 [node name="Quit" type="Button" parent="CenterContainer/PanelContainer/BoxContainer" unique_id=573209138]
