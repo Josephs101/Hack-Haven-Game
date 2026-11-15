@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://d4brsu00t52y3"]
+[gd_scene format=3 uid="uid://3ooon1hgk15k"]
 
 [ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
 [ext_resource type="Script" path="res://scenes/level1.gd" id="1_eugj0"]
@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://bew01jfprilr" path="res://scenes/gameplay/Peg.tscn" id="5_eugj0"]
 [ext_resource type="PackedScene" uid="uid://csocqn4oj32a" path="res://scenes/gameplay/RedBumper.tscn" id="5_ospsn"]
 [ext_resource type="PackedScene" uid="uid://dk1025l1hjsa7" path="res://scenes/gameplay/BlueBumper.tscn" id="6_vc60b"]
-[ext_resource type="AudioStream" uid="uid://cyfe8s4aqe3u2" path="res://assets/sound/SLIME 2.mp3" id="7_v8ldn"]
 [ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="7_flipr"]
+[ext_resource type="AudioStream" uid="uid://cyfe8s4aqe3u2" path="res://assets/sound/SLIME 2.mp3" id="7_v8ldn"]
 [ext_resource type="PackedScene" uid="uid://dw76a2d1tnpk1" path="res://scenes/gameplay/BlueBar.tscn" id="8_bar"]
 
 [node name="Level3" type="Node2D" unique_id=1978717256]
@@ -17,7 +17,7 @@ level_number = 3
 [node name="LevelScreen" parent="." unique_id=366287594 instance=ExtResource("1_8d8in")]
 
 [node name="Flippers" parent="." unique_id=1203122303 instance=ExtResource("2_e5fgp")]
-position = Vector2(306, 951)
+position = Vector2(268, 963)
 
 [node name="Flippers2" parent="." unique_id=1366285630 instance=ExtResource("2_e5fgp")]
 position = Vector2(635, 949)
@@ -25,17 +25,18 @@ input_action = "RightFlipper"
 rotation_direction = -1.0
 
 [node name="AnimatedSprite2D" parent="Flippers2" index="0" unique_id=668592814]
-position = Vector2(-36, -39)
+position = Vector2(15, -27)
 flip_h = true
 
 [node name="CollisionShape2D" parent="Flippers2/AnimatableBody2D" parent_id_path=PackedInt32Array(1366285630, 2074405972) index="0" unique_id=1209279245]
+position = Vector2(52, 12)
 rotation = 3.1415927
 
 [node name="Flippers3" parent="." unique_id=1860416840 instance=ExtResource("2_e5fgp")]
-position = Vector2(340, 830)
+position = Vector2(281, 345)
 
 [node name="Flippers4" parent="." unique_id=1429283118 instance=ExtResource("7_flipr")]
-position = Vector2(620, 830)
+position = Vector2(590, 704)
 
 [node name="BlueBar" parent="." unique_id=958699172 instance=ExtResource("8_bar")]
 position = Vector2(390, 560)

@@ -50,9 +50,6 @@ flip_h = true
 position = Vector2(-0.3633423, 0.12866211)
 rotation = -0.3403392
 
-[node name="Peg" parent="." unique_id=1192331612 instance=ExtResource("5_eugj0")]
-position = Vector2(485, 530)
-
 [node name="Peg6" parent="." unique_id=1773738865 instance=ExtResource("5_eugj0")]
 position = Vector2(379, 654)
 
