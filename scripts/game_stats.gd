@@ -35,7 +35,6 @@ const UPGRADES := {
 		"name": "HEAVY BONES",
 		"desc": "+50% boss damage",
 		"icon": "res://assets/sprites/heavy_bones.png",
-		"color": Color(1.0, 0.45, 0.3),
 	},
 	"low_gravity": {
 		"name": "LOW GRAVITY",
@@ -73,6 +72,7 @@ var boss_hp := 100
 var balls_left := 3
 var active_balls := 0
 var pending_points := 0
+var level_damage := 0
 var upgrades: Array[Dictionary] = []
 
 # Run-wide modifiers applied by upgrades.
@@ -107,7 +107,7 @@ func start_run(level_number: int = 1) -> void:
 
 
 # Call this when moving to the next level/boss.
-# Score is preserved between levels.
+# Score and damage reset at the start of each level.
 func start_level(level_number: int) -> void:
 	var data: Dictionary = LEVELS.get(level_number, LEVELS[1])
 
@@ -115,6 +115,10 @@ func start_level(level_number: int) -> void:
 	balls_per_set = int(data["balls"])
 	rounds_per_boss = int(data.get("rounds", 1))
 	rounds_left = rounds_per_boss
+
+	score = 0
+	pending_points = 0
+	level_damage = 0
 
 	boss_name = str(data["name"])
 	boss_max_hp = int(data["max_hp"])
@@ -131,11 +135,9 @@ func start_level(level_number: int) -> void:
 func start_ball_set() -> void:
 	balls_left = balls_per_set + extra_balls
 	active_balls = 0
-	pending_points = 0
 	combo = 0
 	multiplier = 1.0
 	_combo_time = 0.0
-	score = 0
 
 	score_changed.emit(score)
 	combo_changed.emit(combo, multiplier)
@@ -191,15 +193,16 @@ func consume_round() -> bool:
 
 
 func finish_ball_set() -> void:
-	var damage := int(round(pending_points / float(POINTS_PER_DAMAGE) * damage_multiplier))
-	pending_points = 0
+	var total_damage := int(round(pending_points / float(POINTS_PER_DAMAGE) * damage_multiplier))
+	var damage_this_set := total_damage - level_damage
+	level_damage = total_damage
 
 	break_combo()
 
-	if damage > 0:
-		set_boss_health(boss_hp - damage, boss_max_hp)
+	if damage_this_set > 0:
+		set_boss_health(boss_hp - damage_this_set, boss_max_hp)
 
-	ball_set_finished.emit(damage, boss_hp)
+	ball_set_finished.emit(level_damage, boss_hp)
 
 
 func set_boss_health(value: int, maximum: int = -1) -> void:
@@ -245,7 +248,7 @@ func apply_upgrade(id: String) -> void:
 		"low_gravity":
 			gravity_multiplier = 0.5
 		"ultraspeed":
-			speed_multiplier += 0.3
+			speed_multiplier += 0.2
 		"multiball":
 			multiball_enabled = true
 

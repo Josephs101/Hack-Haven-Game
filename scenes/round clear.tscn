@@ -1,8 +1,14 @@
-[gd_scene format=3 uid="uid://cx5p8ck3issmc"]
+[gd_scene format=3 uid="uid://dpakv87bg356a"]
 
-[ext_resource type="Script" uid="uid://7oktj75wy2uu" path="res://scripts/round_clear.gd" id="1_fhyly"]
-[ext_resource type="Texture2D" uid="uid://bd815f7a20qtu" path="res://icon.svg" id="2_gpdo2"]
+[ext_resource type="Script" path="res://scripts/round_clear.gd" id="1_fhyly"]
+[ext_resource type="Texture2D" uid="uid://cix8aqsc11x6t" path="res://assets/sprites/Sprite_sheet_'1.png" id="2_gpdo2"]
 [ext_resource type="FontFile" uid="uid://dbkryvmahqkrd" path="res://assets/font(s)/Minecraft.ttf" id="3_gpdo2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ma7ov"]
+atlas = ExtResource("2_gpdo2")
+region = Rect2(95.566055, 223.76704, 33.177307, 32.58275)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nb3d3"]
 
 [node name="Control" type="Control" unique_id=172111338]
 process_mode = 3
@@ -44,11 +50,12 @@ grow_vertical = 2
 [node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=889373046]
 custom_minimum_size = Vector2(500, 300)
 layout_mode = 2
-texture = ExtResource("2_gpdo2")
+texture = SubResource("AtlasTexture_ma7ov")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=292245312]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_nb3d3")
 
 [node name="BoxContainer" type="BoxContainer" parent="CenterContainer/PanelContainer" unique_id=1110103633]
 layout_mode = 2

@@ -2,6 +2,10 @@ extends Node2D
 
 @export_file("*.tscn") var next_level_scene := ""
 
+# Drain opening at the bottom of the funnel. Tune these in the Inspector.
+@export var drain_center := Vector2(480.0, 1075.0)
+@export var drain_size := Vector2(180.0, 70.0)
+
 @onready var round_clear: Control = $UI/RoundClear
 @onready var upgrade_screen: Control = $UI/UpgradeScreen
 @onready var launcher: Node2D = $launcher
@@ -57,10 +61,10 @@ func _create_arena_bounds() -> void:
 
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	rect.size = Vector2(view.x, 80.0)
+	rect.size = drain_size
 	shape.shape = rect
 	drain.add_child(shape)
-	drain.position = Vector2(view.x * 0.5, view.y - 40.0)
+	drain.position = drain_center
 	add_child(drain)
 	drain.body_entered.connect(_on_drain_body_entered)
 
