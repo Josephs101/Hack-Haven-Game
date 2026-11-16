@@ -55,6 +55,7 @@ offset_right = 1092.0
 offset_bottom = 128.0
 
 [node name="launcher" parent="." unique_id=156511213 instance=ExtResource("6_016qk")]
+z_index = 1
 position = Vector2(176, 996)
 
 [node name="pinballTable" parent="." unique_id=282973260 instance=ExtResource("5_qdpy8")]

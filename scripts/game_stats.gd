@@ -36,10 +36,10 @@ const ABILITY_COOLDOWN := 15.0
 # "boss_frames" is optional: a SpriteFrames resource that replaces the boss art
 # baked into InGameUI.tscn. Leave it out to keep the default slime.
 const LEVELS := {
-	1: {"name": "John /'Bounceback/' Slime", "max_hp": 100, "balls": 3, "rounds": 1},
+	1: {"name": "John /'Bounceback/' Slime", "max_hp": 200, "balls": 3, "rounds": 1},
 	2: {
 		"name": "BasketClops",
-		"max_hp": 200,
+		"max_hp": 400,
 		"balls": 3,
 		"rounds": 2,
 		"boss_frames": "res://assets/sprites/cyclops_frames.tres",
@@ -57,7 +57,7 @@ const LEVELS := {
 # Past the authored levels the game keeps going: the three bosses take turns
 # again and again, each lap hits harder, and every layout is generated.
 const ENDLESS_FIRST_LEVEL := 4
-const ENDLESS_BASE_HP := 220.0
+const ENDLESS_BASE_HP := 2000.0
 const ENDLESS_HP_GROWTH := 1.75
 
 const ENDLESS_BOSSES := [

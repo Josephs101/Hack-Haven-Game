@@ -88,6 +88,7 @@ animations = [{
 points = PackedVector2Array(-21, -1, 0, -25, 102, -1, 0, 25)
 
 [node name="Flippers" type="Node2D" unique_id=1203122303]
+scale = Vector2(1.3, 1.3)
 script = ExtResource("1_3tc68")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=668592814]
@@ -96,7 +97,7 @@ scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_kgykn")
 animation = &"Rest"
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." groups=["scoreable"] unique_id=2074405972]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=2074405972 groups=["scoreable"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1209279245]
 shape = SubResource("ConvexPolygonShape2D_jgsmh")

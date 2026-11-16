@@ -1,9 +1,10 @@
-[gd_scene format=3 uid="uid://bhpo7p3qrxbs3"]
+[gd_scene format=3 uid="uid://dr1fvc4l8uuvr"]
 
 [ext_resource type="PackedScene" uid="uid://btnchici7wo1i" path="res://scenes/LevelScreen.tscn" id="1_8d8in"]
-[ext_resource type="Script" uid="uid://csiu7m0ddssi8" path="res://scripts/endless_level.gd" id="2_endless"]
+[ext_resource type="Script" path="res://scripts/endless_level.gd" id="2_endless"]
 [ext_resource type="PackedScene" uid="uid://b03ya11b5bo5r" path="res://scenes/gameplay/Flippers.tscn" id="3_flip"]
-[ext_resource type="PackedScene" path="res://scenes/gameplay/FlippersRight.tscn" id="4_flipr"]
+[ext_resource type="PackedScene" uid="uid://cbgrtu5wjy0pw" path="res://scenes/gameplay/FlippersRight.tscn" id="4_flipr"]
+[ext_resource type="AudioStream" uid="uid://b5njcsv0mkeot" path="res://assets/sound/VICTORY.mp3" id="5_4opm0"]
 
 [node name="EndlessLevel" type="Node2D" unique_id=1323986588]
 script = ExtResource("2_endless")
@@ -11,10 +12,10 @@ script = ExtResource("2_endless")
 [node name="LevelScreen" parent="." unique_id=338866007 instance=ExtResource("1_8d8in")]
 
 [node name="Flippers" parent="." unique_id=1527051361 instance=ExtResource("3_flip")]
-position = Vector2(338, 989)
+position = Vector2(368, 908)
 
 [node name="Flippers2" parent="." unique_id=1953108219 instance=ExtResource("3_flip")]
-position = Vector2(635, 949)
+position = Vector2(561, 934.00006)
 input_action = "RightFlipper"
 rotation_direction = -1.0
 
@@ -31,5 +32,10 @@ position = Vector2(260, 355)
 
 [node name="Flippers4" parent="." unique_id=138820497 instance=ExtResource("4_flipr")]
 position = Vector2(701, 356)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=2043593487]
+stream = ExtResource("5_4opm0")
+volume_db = 16.0
+autoplay = true
 
 [editable path="Flippers2"]
