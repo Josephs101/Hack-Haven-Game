@@ -36,7 +36,7 @@ const ABILITY_COOLDOWN := 15.0
 # "boss_frames" is optional: a SpriteFrames resource that replaces the boss art
 # baked into InGameUI.tscn. Leave it out to keep the default slime.
 const LEVELS := {
-	1: {"name": "John /'Bounceback/' Slime", "max_hp": 200, "balls": 3, "rounds": 1},
+	1: {"name": "John /'Bounceback/' Slime", "max_hp": 100, "balls": 3, "rounds": 1},
 	2: {
 		"name": "BasketClops",
 		"max_hp": 400,
@@ -58,7 +58,10 @@ const LEVELS := {
 # again and again, each lap hits harder, and every layout is generated.
 const ENDLESS_FIRST_LEVEL := 4
 const ENDLESS_BASE_HP := 2000.0
-const ENDLESS_HP_GROWTH := 1.75
+const ENDLESS_HP_GROWTH := 1.5
+
+# Endless pegs take one extra hit per level past the authored three.
+const PEG_EXTRA_HITS_PER_LEVEL := 1
 
 const ENDLESS_BOSSES := [
 	{"name": "John /'Bounceback/' Slime", "frames": ""},
@@ -113,7 +116,7 @@ const ABILITIES := {
 	"split_ball": {
 		"name": "SPLIT BALL",
 		"short": "SPLIT",
-		"desc": "Split the highest ball into three",
+		"desc": "Duplicate every ball in play",
 		"icon": "res://assets/sprites/split_balls.png",
 	},
 	"bouncy_walls": {
@@ -130,6 +133,7 @@ var balls_per_set := 3
 var rounds_per_boss := 1
 var rounds_left := 1
 var boss_frames_path := ""
+var peg_extra_hits := 0
 
 var bosses_beaten := 0
 var best_bosses := 0
@@ -160,6 +164,7 @@ var ability_cooldown := 0.0
 
 var _combo_time := 0.0
 var _boss_down_emitted := false
+var _ball_set_finished := false
 
 
 func _ready() -> void:
@@ -198,6 +203,7 @@ func start_level(level_number: int) -> void:
 	balls_per_set = int(data["balls"])
 	rounds_per_boss = int(data.get("rounds", 1))
 	rounds_left = rounds_per_boss
+	peg_extra_hits = maxi(0, level - (ENDLESS_FIRST_LEVEL - 1)) * PEG_EXTRA_HITS_PER_LEVEL
 
 	score = 0
 	pending_points = 0
@@ -225,6 +231,7 @@ func start_ball_set() -> void:
 	combo = 0
 	multiplier = 1.0
 	_combo_time = 0.0
+	_ball_set_finished = false
 
 	score_changed.emit(score)
 	combo_changed.emit(combo, multiplier)
@@ -239,11 +246,10 @@ func level_data(level_number: int) -> Dictionary:
 
 	var index := level_number - ENDLESS_FIRST_LEVEL
 	var boss: Dictionary = ENDLESS_BOSSES[index % ENDLESS_BOSSES.size()]
-	var lap := index / ENDLESS_BOSSES.size()
 
 	return {
-		"name": "%s mk %d" % [boss["name"], lap + 2],
-		"max_hp": int(round(ENDLESS_BASE_HP * pow(ENDLESS_HP_GROWTH, lap))),
+		"name": "%s mk %d" % [boss["name"], index + 2],
+		"max_hp": int(round(ENDLESS_BASE_HP * pow(ENDLESS_HP_GROWTH, index))),
 		"balls": 4,
 		"rounds": 2,
 		"boss_frames": boss["frames"],
@@ -299,6 +305,7 @@ func use_ball() -> bool:
 func ball_drained() -> void:
 	active_balls = maxi(0, active_balls - 1)
 	_report_ball_damage()
+	_apply_pending_damage()
 
 	if balls_left <= 0 and active_balls == 0:
 		finish_ball_set()
@@ -328,6 +335,17 @@ func _report_ball_damage() -> void:
 	ball_damage.emit(gained, total)
 
 
+# Convert any points not yet turned into damage and take it off the boss right
+# away, so the HP bar drops on every ball drain instead of at the end of the set.
+func _apply_pending_damage() -> void:
+	var total := damage_from_points(pending_points)
+	var gained := total - level_damage
+	level_damage = total
+
+	if gained > 0:
+		set_boss_health(boss_hp - gained, boss_max_hp)
+
+
 # Use one round. Returns true and starts a new ball set if a round remains.
 func consume_round() -> bool:
 	rounds_left -= 1
@@ -340,20 +358,16 @@ func consume_round() -> bool:
 
 
 func finish_ball_set() -> void:
-	# Once the boss is down the level is already resolved, so a ball still
-	# rolling around must not end the round a second time.
-	if boss_hp <= 0 and _boss_down_emitted:
+	# A ball still rolling after the boss is down must not end the round twice;
+	# the flag resets when start_ball_set() begins the next round.
+	if _ball_set_finished:
 		return
+	_ball_set_finished = true
 
-	var total_damage := damage_from_points(pending_points)
-	var damage_this_set := total_damage - level_damage
-	level_damage = total_damage
-
+	# Catch anything not already applied (e.g. the dev-tool instant kill); the
+	# per-drain path has already taken this off the boss.
+	_apply_pending_damage()
 	break_combo()
-
-	if damage_this_set > 0:
-		set_boss_health(boss_hp - damage_this_set, boss_max_hp)
-
 	ball_set_finished.emit(level_damage, boss_hp)
 
 

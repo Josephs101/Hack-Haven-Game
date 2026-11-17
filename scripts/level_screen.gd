@@ -39,10 +39,16 @@ const BALL_SCENE := preload("res://scenes/gameplay/PinBall.tscn")
 const BOUNCY_DURATION := 5.0
 const BOUNCY_BOUNCE := 0.95
 
+# If every ball is at rest above the flippers for this long and there are none
+# left to launch, the round is considered stuck and the level is resolved.
+const IDLE_FAILSAFE := 5.0
+
 var _bouncy_wall_originals := {}
 var _bouncy_ball_originals := {}
 var _bouncy_overlay: ColorRect = null
 var _bouncy_timer: Timer = null
+var _level_ended := false
+var _idle_seconds := 0.0
 # Floating "+N" score popups, also on the UI layer.
 const SCORE_POPUPS := preload("res://scripts/score_popups.gd")
 
@@ -67,6 +73,7 @@ func _ready() -> void:
 	_add_dev_tools()
 
 	GameStats.ball_set_finished.connect(_on_ball_set_finished)
+	GameStats.boss_defeated.connect(_on_boss_defeated)
 	round_clear.continue_pressed.connect(_on_round_continue)
 	upgrade_screen.upgrade_chosen.connect(_on_upgrade_chosen)
 
@@ -104,16 +111,47 @@ func _add_screen_fx() -> void:
 
 
 func _on_ball_set_finished(damage: int, boss_hp: int) -> void:
+	if _level_ended:
+		return
+
 	# Wait for the boss bar tween/flash.
 	await get_tree().create_timer(0.9).timeout
 
+	if _level_ended:
+		return
+
 	if boss_hp <= 0:
-		round_clear.open(GameStats.score, damage)
+		_open_round_clear(damage)
 	else:
 		if GameStats.consume_round():
 			launcher.arm()
 		else:
-			$UI/GameOver.show_game_over()
+			_end_game_over()
+
+
+# Boss died mid-set: show the round clear right away instead of waiting for the
+# remaining balls to drain.
+func _on_boss_defeated() -> void:
+	if _level_ended:
+		return
+	_level_ended = true
+
+	await get_tree().create_timer(0.6).timeout
+	round_clear.open(GameStats.score, GameStats.level_damage)
+
+
+func _open_round_clear(damage: int) -> void:
+	if _level_ended:
+		return
+	_level_ended = true
+	round_clear.open(GameStats.score, damage)
+
+
+func _end_game_over() -> void:
+	if _level_ended:
+		return
+	_level_ended = true
+	$UI/GameOver.show_game_over()
 
 
 func _on_round_continue() -> void:
@@ -189,12 +227,57 @@ func _on_drain_body_entered(body: Node) -> void:
 
 
 func _on_player_died() -> void:
-	$UI/GameOver.show_game_over()
+	_end_game_over()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if _level_ended:
+		return
+
 	if Input.is_action_just_pressed("ability"):
 		_use_ability()
+
+	_tick_idle(delta)
+
+
+# Ends the round if every ball left in play is sitting still above the flippers
+# with none left to launch. Balls resting on the flippers are ignored: the
+# player can still flip those, so that is normal play, not a stall.
+func _tick_idle(delta: float) -> void:
+	if get_tree().paused or GameStats.boss_hp <= 0:
+		_idle_seconds = 0.0
+		return
+
+	var balls := _active_balls()
+	if balls.is_empty():
+		_idle_seconds = 0.0
+		return
+
+	for ball in balls:
+		# Any real movement means the table is still live.
+		if ball.linear_velocity.length() > 30.0:
+			_idle_seconds = 0.0
+			return
+
+		# Balls resting on the flippers are under player control, not stuck.
+		# The launch lane is at x < 230, so a ball wedged there is NOT exempt.
+		if ball.global_position.y >= 880.0 and ball.global_position.x > 250.0:
+			_idle_seconds = 0.0
+			return
+
+	_idle_seconds += delta
+	if _idle_seconds >= IDLE_FAILSAFE:
+		_fail_safe()
+
+
+func _fail_safe() -> void:
+	if _level_ended:
+		return
+
+	if GameStats.boss_hp <= 0:
+		_open_round_clear(GameStats.level_damage)
+	else:
+		_end_game_over()
 
 
 func _use_ability() -> void:
@@ -269,29 +352,27 @@ func _ability_top_balls() -> void:
 			ball.clear_trail()
 
 
-# ABILITY 2: split the highest live ball into three.
+# ABILITY 2: duplicate every live ball, so N balls become 2N.
 func _ability_split_ball() -> void:
 	var balls := _active_balls()
 	if balls.is_empty():
 		return
 
-	var highest: RigidBody2D = balls[0]
+	# Iterate the snapshot taken above: the copies join the "ball" group as they
+	# are added, and must not themselves be duplicated in this same activation.
 	for ball in balls:
-		if ball.global_position.y < highest.global_position.y:
-			highest = ball
+		var offset := Vector2.RIGHT
+		if ball.linear_velocity.length() > 1.0:
+			offset = ball.linear_velocity.normalized().orthogonal()
 
-	var base_position: Vector2 = highest.global_position
-	var base_velocity: Vector2 = highest.linear_velocity
-
-	for i in range(2):
 		var extra = BALL_SCENE.instantiate()
 		extra.freeze = false
 		extra.sleeping = false
 		extra.collision_layer = 1
 		extra.collision_mask = 1
 		add_child(extra)
-		extra.global_position = base_position + Vector2((float(i) - 0.5) * 48.0, 0.0)
-		extra.linear_velocity = base_velocity + Vector2((float(i) - 0.5) * 240.0, -140.0)
+		extra.global_position = ball.global_position + offset * 40.0
+		extra.linear_velocity = ball.linear_velocity + offset * 160.0
 		extra.add_to_group("ball")
 		extra.tree_exited.connect(GameStats.ball_drained, CONNECT_ONE_SHOT)
 		GameStats.active_balls += 1

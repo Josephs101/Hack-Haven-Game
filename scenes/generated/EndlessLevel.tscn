@@ -12,10 +12,10 @@ script = ExtResource("2_endless")
 [node name="LevelScreen" parent="." unique_id=338866007 instance=ExtResource("1_8d8in")]
 
 [node name="Flippers" parent="." unique_id=1527051361 instance=ExtResource("3_flip")]
-position = Vector2(368, 908)
+position = Vector2(336.00003, 926.00006)
 
 [node name="Flippers2" parent="." unique_id=1953108219 instance=ExtResource("3_flip")]
-position = Vector2(561, 934.00006)
+position = Vector2(625.00006, 931.00006)
 input_action = "RightFlipper"
 rotation_direction = -1.0
 

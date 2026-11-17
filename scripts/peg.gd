@@ -15,7 +15,8 @@ extends StaticBody2D
 
 ## Size of one colour cell inside rainbow_pins.png.
 @export var frame_size := Vector2(16, 16)
-## How many colours the sheet holds; the peg breaks after this many hits.
+## How many colours the sheet holds. The peg breaks after this many hits plus
+## GameStats.peg_extra_hits, which endless levels raise.
 @export var colour_count := 8
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -25,9 +26,11 @@ var _base_scale := Vector2.ONE
 var _tween: Tween = null
 var _colour := 0
 var _broken := false
+var _max_hits := 8
 
 
 func _ready() -> void:
+	_max_hits = colour_count + GameStats.peg_extra_hits
 	_base_scale = sprite.scale
 	sprite.region_enabled = true
 	_apply_colour()
@@ -42,7 +45,7 @@ func hit() -> void:
 	_colour += 1
 	GameStats.peg_hit.emit(GameStats.combo)
 
-	if _colour >= colour_count:
+	if _colour >= _max_hits:
 		_break()
 		return
 
@@ -55,7 +58,8 @@ func is_broken() -> bool:
 
 
 func _apply_colour() -> void:
-	sprite.region_rect = Rect2(Vector2(_colour, 0) * frame_size, frame_size)
+	var frame := _colour % maxi(1, colour_count)
+	sprite.region_rect = Rect2(Vector2(frame, 0) * frame_size, frame_size)
 
 
 func _break() -> void:
